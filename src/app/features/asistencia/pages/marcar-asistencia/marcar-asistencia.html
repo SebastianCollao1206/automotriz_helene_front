@@ -1,0 +1,74 @@
+<div class="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-100">
+    <div class="text-center mb-8">
+        <h1 class="texto-grande">
+            <i class="far fa-calendar-alt text-zinc-600 mx-5"></i> Sistema de control de Asistencia
+        </h1>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-15 w-full max-w-5xl">
+        <div class="lg:col-span-2 p-8 shadow-2xl rounded-2xl bg-white">
+            <div [ngClass]="{
+                'bg-gradient-to-l from-zinc-400 to-zinc-700': !mostrarContador,
+                'bg-gradient-to-r from-green-700 to-green-400': mostrarContador
+            }" class="mb-5 p-5 text-white texto-mediano font-semibold rounded-2xl transition-all flex items-center">
+                {{ mensajeInstruccion }}
+
+                <div *ngIf="mostrarContador" class="texto-grande mx-auto text-center ">
+                    {{ parpadeoActual }} / {{ parpadeoObjetivo }}
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <div class="relative bg-zinc-900 rounded-xl overflow-hidden shadow-inner w-full">
+                    <video #videoElement autoplay muted playsinline
+                        class="w-full aspect-video object-cover espejo"></video>
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div class="w-43 h-48 rounded-full border-3 border-green-500 opacity-80"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <button class="btn btn-rojo" (click)="recargarCamara()">
+                    <i class="fas fa-sync-alt mx-3"></i>
+                    Recargar
+                </button>
+                <button class="btn btn-azul" (click)="marcarAsistencia()">
+                    <i class="fas fa-check-circle mx-3"></i>
+                    Marcar Asistencia
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1 shadow-2xl rounded-2xl bg-white overflow-hidden flex flex-col">
+            <div class="flex justify-center p-6 border-b">
+                <h2 class="texto-normal font-semibold items-center text-center">
+                    <i class="fas fa-lightbulb mr-3 text-zinc-600"></i>
+                    Recomendaciones
+                </h2>
+            </div>
+
+            <div class="p-5 flex-1">
+                <ul class="space-y-4 text-zinc-700">
+                    <li class="flex items-start">
+                        <i class="fas fa-info-circle text-blue-500 mr-3 mt-1"></i>
+                        <span>Sigue las indicaciones</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-sun text-yellow-500 mr-3 mt-1"></i>
+                        <span>Asegúrate de tener buena iluminación</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-users-slash text-red-500 mr-3 mt-1"></i>
+                        <span>Verifica que no haya más personas en la cámara</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="p-5 justify-center flex">
+                <img src="/assets/IMG/reconocimiento.jpg" alt="Recomendaciones visuales" class="w-50 rounded-lg">
+            </div>
+        </div>
+    </div>
+</div>
+
