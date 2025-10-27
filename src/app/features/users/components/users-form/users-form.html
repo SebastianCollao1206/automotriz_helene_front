@@ -1,0 +1,156 @@
+<div class="max-w-6xl mx-auto p-8">
+    <form [formGroup]="formularioUsuario" (ngSubmit)="enviarFormulario()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div *ngIf="!modoEdicion">
+                <label class="label-formulario">
+                    DNI <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <input type="text" formControlName="dni"
+                        [class]="validacionFormulario.obtenerClasesCampo(formularioUsuario, 'dni')"
+                        placeholder="Ingrese el DNI del usuario" maxlength="8">
+                    <button type="button" (click)="buscarDni()" [disabled]="estaBuscandoDni"
+                        class="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-800 disabled:text-gray-400 transition-colors">
+                        <i class="fas" [class.fa-search]="!estaBuscandoDni" [class.fa-spinner]="estaBuscandoDni"
+                            [class.fa-spin]="estaBuscandoDni"></i>
+                    </button>
+                </div>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioUsuario, 'dni')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioUsuario, 'dni', 'El DNI') }}
+                </p>
+            </div>
+
+            <div *ngIf="modoEdicion">
+                <label class="label-formulario">
+                    Estado
+                </label>
+                <div class="relative inline-block w-full">
+                    <select formControlName="enabled"
+                        class="texto-pequeño input-formulario appearance-none cursor-pointer">
+                        <option [value]="true">Activo</option>
+                        <option [value]="false">Inactivo</option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+            </div>
+            <div>
+                <label class="label-formulario">
+                    Nombre de Usuario <span class="text-red-500">*</span>
+                </label>
+                <input type="text" formControlName="nombreCompleto"
+                    class="texto-pequeño input-formulario bg-gray-100 cursor-not-allowed"
+                    [placeholder]="modoEdicion ? 'Nombre del usuario' : 'Se completará automáticamente'">
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div>
+                <label class="label-formulario">
+                    Correo Electrónico <span class="text-red-500">*</span>
+                </label>
+                <input type="email" formControlName="correo"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioUsuario, 'correo')"
+                    placeholder="usuario@ejemplo.com">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioUsuario, 'correo')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioUsuario, 'correo', 'El correo') }}
+                </p>
+            </div>
+            <div>
+                <label class="label-formulario">
+                    Contraseña <span *ngIf="!modoEdicion" class="text-red-500">*</span>
+                </label>
+                <input type="password" formControlName="contrasena"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioUsuario, 'contrasena')"
+                    [placeholder]="modoEdicion ? 'Dejar vacío para mantener la actual' : 'Ingrese la contraseña'">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioUsuario, 'contrasena')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioUsuario, 'contrasena', 'La contraseña') }}
+                </p>
+                <p *ngIf="modoEdicion" class="mt-1 text-xs text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Dejar vacío para mantener la contraseña actual
+                </p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div>
+                <label class="label-formulario">
+                    Roles del Usuario <span class="text-red-500">*</span>
+                </label>
+                <div *ngIf="cargandoRoles" class="flex justify-center items-center p-8">
+                    <i class="fas fa-spinner fa-spin text-2xl text-blue-500"></i>
+                    <span class="ml-3 text-zinc-600">Cargando roles...</span>
+                </div>
+                <div *ngIf="!cargandoRoles && rolesDisponibles.length > 0"
+                    [class]="validacionFormulario.esCampoInvalido(formularioUsuario, 'roles') ? 'input-formulario overflow-y-auto border-red-500' : 'input-formulario overflow-y-auto'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-7">
+                        <label *ngFor="let role of rolesDisponibles"
+                            class="flex items-center p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors group">
+                            <input type="checkbox" [checked]="esRolSeleccionado(role.id)"
+                                (change)="alCambiarRol($event, role.id)" class="w-4 h-4">
+                            <div class="ml-4">
+                                <span class="texto-pequeño">{{ obtenerNombreRol(role.name) }}</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div *ngIf="!cargandoRoles && rolesDisponibles.length === 0"
+                    class="input-formulario text-center text-gray-500">
+                    <i class="fas fa-exclamation-circle text-2xl mb-2"></i>
+                    <p class="texto-pequeño">No hay roles disponibles</p>
+                </div>
+                <p class="mt-2 texto-chico text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Puedes seleccionar múltiples roles para el usuario
+                </p>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioUsuario, 'roles')"
+                    class="mt-1 text-xs text-red-500">
+                    Debe seleccionar al menos un rol
+                </p>
+            </div>
+            <div>
+                <label class="label-formulario">
+                    Foto de Perfil <span *ngIf="!modoEdicion" class="text-red-500">*</span>
+                </label>
+                <div
+                    class="input-formulario flex flex-col items-center justify-center max-h-60 hover:border-blue-500 border-2 border-dashed rounded-lg cursor-pointer transition-colors">
+                    <div class="relative w-full h-50 flex items-center justify-center">
+                        <label for="fileInput"
+                            class="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+                            <div *ngIf="urlImagenSeleccionada" class="relative">
+                                <img [src]="urlImagenSeleccionada" alt="Preview"
+                                    class="max-w-full max-h-45 object-contain rounded-lg">
+                                <button type="button" (click)="eliminarImagen(); $event.preventDefault()"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors">
+                                    <i class="fas fa-times text-xs"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="!urlImagenSeleccionada" class="flex flex-col items-center justify-center">
+                                <i class="fas fa-camera text-7xl text-zinc-600"></i>
+                                <p class="mt-4 texto-chico text-gray-600 text-center">
+                                    Haz clic o arrastra la foto aquí
+                                </p>
+                            </div>
+                            <input type="file" id="fileInput" accept="image/*" class="hidden"
+                                (change)="alSeleccionarArchivo($event)">
+                        </label>
+                    </div>
+                </div>
+                <p *ngIf="modoEdicion" class="mt-2 text-xs text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Opcional: selecciona una nueva imagen para reemplazar la actual
+                </p>
+            </div>
+        </div>
+        <div class="flex justify-center pt-4">
+            <button type="submit" [disabled]="formularioUsuario.invalid || cargandoRoles || enviandoFormulario"
+                [class]="formularioUsuario.invalid || cargandoRoles || enviandoFormulario ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'">
+                <i class="fas mx-3" [class.fa-save]="!modoEdicion" [class.fa-edit]="modoEdicion"></i>
+                <span>{{ enviandoFormulario ? (modoEdicion ? 'Actualizando...' : 'Guardando...') : (modoEdicion ?
+                    'Actualizar Usuario' : 'Guardar Usuario') }}</span>
+            </button>
+        </div>
+    </form>
+</div>

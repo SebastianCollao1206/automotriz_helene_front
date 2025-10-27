@@ -1,0 +1,249 @@
+<div class="max-w-6xl mx-auto p-8">
+    <form [formGroup]="formularioProducto" (ngSubmit)="enviarFormulario()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
+            <div>
+                <label class="label-formulario">
+                    Nombre del Producto <span class="text-red-500">*</span>
+                </label>
+                <input type="text" formControlName="nombre"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'nombre')"
+                    placeholder="Ingrese el nombre del producto">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'nombre')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'nombre', 'El nombre') }}
+                </p>
+            </div>
+
+            <div *ngIf="!modoEdicion">
+                <label class="label-formulario">
+                    Cantidad/Tamaño <span class="text-red-500">*</span>
+                </label>
+                <input type="number" formControlName="cantidadTamanio"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'cantidadTamanio')"
+                    placeholder="Ingrese la cantidad o tamaño" min="0" step="0.01">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'cantidadTamanio')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'cantidadTamanio', 'La
+                    cantidad/tamaño') }}
+                </p>
+            </div>
+
+            <div *ngIf="modoEdicion">
+                <label class="label-formulario">Estado</label>
+                <div class="relative inline-block w-full">
+                    <select formControlName="enabled"
+                        class="texto-pequeño input-formulario appearance-none cursor-pointer">
+                        <option [value]="true">Activo</option>
+                        <option [value]="false">Inactivo</option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+            </div>
+
+            <div>
+                <label class="label-formulario">
+                    Precio de Venta <span class="text-red-500">*</span>
+                </label>
+                <input type="number" formControlName="precioVenta"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'precioVenta')"
+                    placeholder="Ingrese el precio de venta" min="0" step="0.01">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'precioVenta')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'precioVenta', 'El precio de venta')
+                    }}
+                </p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div>
+                <label class="label-formulario">Stock Actual</label>
+                <input type="number" formControlName="stock"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'stock')"
+                    placeholder="Stock actual" min="0">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'stock')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'stock', 'El stock') }}
+                </p>
+            </div>
+
+            <div>
+                <label class="label-formulario">
+                    Stock Mínimo <span class="text-red-500">*</span>
+                </label>
+                <input type="number" formControlName="stockMinimo"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'stockMinimo')"
+                    placeholder="Stock mínimo" min="0">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'stockMinimo')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'stockMinimo', 'El stock mínimo') }}
+                </p>
+            </div>
+
+            <div>
+                <label class="label-formulario">Descuento (%)</label>
+                <input type="number" formControlName="descuento"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'descuento')"
+                    placeholder="Descuento" min="0" max="100" step="0.01">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'descuento')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'descuento', 'El descuento') }}
+                </p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:gap-12" [ngClass]="modoEdicion ? 'md:grid-cols-3' : 'md:grid-cols-2'">
+            <div *ngIf="modoEdicion">
+                <label class="label-formulario">
+                    Cantidad/Tamaño <span class="text-red-500">*</span>
+                </label>
+                <input type="number" formControlName="cantidadTamanio"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'cantidadTamanio')"
+                    placeholder="Ingrese la cantidad o tamaño" min="0" step="0.01">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'cantidadTamanio')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'cantidadTamanio', 'La
+                    cantidad/tamaño') }}
+                </p>
+            </div>
+
+            <div>
+                <label class="label-formulario">Categoría <span class="text-red-500">*</span></label>
+                <div *ngIf="cargandoCategorias" class="flex justify-center items-center p-4">
+                    <i class="fas fa-spinner fa-spin text-xl text-blue-500"></i>
+                    <span class="ml-3 text-zinc-600 texto-pequeño">Cargando categorías...</span>
+                </div>
+                <div *ngIf="!cargandoCategorias" class="relative inline-block w-full">
+                    <select formControlName="categoriaId" [class]="validacionFormulario.esCampoInvalido(formularioProducto, 'categoriaId') ? 
+                'texto-pequeño input-formulario appearance-none cursor-pointer border-red-500' : 
+                'texto-pequeño input-formulario appearance-none cursor-pointer'">
+                        <option value="" disabled selected>Seleccione una categoría</option>
+                        <option *ngFor="let categoria of categoriasDisponibles" [value]="categoria.id">
+                            {{ categoria.nombre }}
+                        </option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'categoriaId')"
+                    class="mt-1 text-xs text-red-500">Debe seleccionar una categoría</p>
+            </div>
+            <div>
+                <label class="label-formulario">Marca <span class="text-red-500">*</span></label>
+                <div *ngIf="cargandoMarcas" class="flex justify-center items-center p-4">
+                    <i class="fas fa-spinner fa-spin text-xl text-blue-500"></i>
+                    <span class="ml-3 text-zinc-600 texto-pequeño">Cargando marcas...</span>
+                </div>
+                <div *ngIf="!cargandoMarcas" class="relative inline-block w-full">
+                    <select formControlName="marcaId" [class]="validacionFormulario.esCampoInvalido(formularioProducto, 'marcaId') ? 
+                'texto-pequeño input-formulario appearance-none cursor-pointer border-red-500' : 
+                'texto-pequeño input-formulario appearance-none cursor-pointer'">
+                        <option value="" disabled selected>Seleccione una marca</option>
+                        <option *ngFor="let marca of marcasDisponibles" [value]="marca.id">
+                            {{ marca.nombre }}
+                        </option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'marcaId')"
+                    class="mt-1 text-xs text-red-500">Debe seleccionar una marca</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div>
+                <label class="label-formulario">Unidad de Medida <span class="text-red-500">*</span></label>
+                <div *ngIf="cargandoUnidades" class="flex justify-center items-center p-4">
+                    <i class="fas fa-spinner fa-spin text-xl text-blue-500"></i>
+                    <span class="ml-3 text-zinc-600 texto-pequeño">Cargando unidades...</span>
+                </div>
+                <div *ngIf="!cargandoUnidades" class="relative inline-block w-full">
+                    <select formControlName="unidadMedidaId"
+                        [class]="validacionFormulario.esCampoInvalido(formularioProducto, 'unidadMedidaId') ? 'texto-pequeño input-formulario appearance-none cursor-pointer border-red-500' : 'texto-pequeño input-formulario appearance-none cursor-pointer'">
+                        <option value="" disabled selected>Seleccione una unidad de medida</option>
+                        <option *ngFor="let unidad of unidadesDisponibles" [value]="unidad.id">
+                            {{ unidad.nombre }}
+                        </option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'unidadMedidaId')"
+                    class="mt-1 text-xs text-red-500">Debe seleccionar una unidad de medida</p>
+            </div>
+            <div>
+                <label class="label-formulario">Tipo de Producto <span class="text-red-500">*</span></label>
+                <div *ngIf="cargandoTipos" class="flex justify-center items-center p-4">
+                    <i class="fas fa-spinner fa-spin text-xl text-blue-500"></i>
+                    <span class="ml-3 text-zinc-600 texto-pequeño">Cargando tipos...</span>
+                </div>
+                <div *ngIf="!cargandoTipos" class="relative inline-block w-full">
+                    <select formControlName="tipoProductoId"
+                        [class]="validacionFormulario.esCampoInvalido(formularioProducto, 'tipoProductoId') ? 'texto-pequeño input-formulario appearance-none cursor-pointer border-red-500' : 'texto-pequeño input-formulario appearance-none cursor-pointer'">
+                        <option value="" disabled selected>Seleccione un tipo de producto</option>
+                        <option *ngFor="let tipo of tiposDisponibles" [value]="tipo.id">
+                            {{ tipo.nombre }}
+                        </option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'tipoProductoId')"
+                    class="mt-1 text-xs text-red-500">Debe seleccionar un tipo de producto</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div>
+                <label class="label-formulario">Descripción <span class="text-red-500">*</span></label>
+                <textarea formControlName="descripcion" rows="3"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'descripcion')"
+                    placeholder="Ingrese una descripción del producto"></textarea>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'descripcion')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProducto, 'descripcion', 'La descripción') }}
+                </p>
+            </div>
+            <div>
+                <label class="label-formulario">
+                    Imagen del Producto <span *ngIf="!modoEdicion" class="text-red-500">*</span>
+                </label>
+                <div
+                    class="input-formulario flex flex-col items-center justify-center max-h-60 hover:border-blue-500 border-2 border-dashed rounded-lg cursor-pointer transition-colors">
+                    <div class="relative w-full h-50 flex items-center justify-center">
+                        <label for="fileInput"
+                            class="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+                            <div *ngIf="urlImagenSeleccionada" class="relative">
+                                <img [src]="urlImagenSeleccionada" alt="Preview"
+                                    class="max-w-full max-h-45 object-contain rounded-lg">
+                                <button type="button" (click)="eliminarImagen(); $event.preventDefault()"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors">
+                                    <i class="fas fa-times text-xs"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="!urlImagenSeleccionada" class="flex flex-col items-center justify-center">
+                                <i class="fas fa-image text-7xl text-zinc-600"></i>
+                                <p class="mt-4 texto-chico text-gray-600 text-center">
+                                    Haz clic o arrastra la imagen aquí
+                                </p>
+                            </div>
+                            <input type="file" id="fileInput" accept="image/*" class="hidden"
+                                (change)="alSeleccionarArchivo($event)">
+                        </label>
+                    </div>
+                </div>
+                <p *ngIf="modoEdicion" class="mt-2 text-xs text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Opcional: selecciona una nueva imagen para reemplazar la actual
+                </p>
+            </div>
+        </div>
+        <div class="flex justify-center pt-4">
+            <button type="submit"
+                [disabled]="formularioProducto.invalid || cargandoCategorias || cargandoMarcas || cargandoUnidades || cargandoTipos || enviandoFormulario"
+                [class]="formularioProducto.invalid || cargandoCategorias || cargandoMarcas || cargandoUnidades || cargandoTipos || enviandoFormulario ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'">
+                <i class="fas mx-3" [class.fa-save]="!modoEdicion" [class.fa-edit]="modoEdicion"></i>
+                <span>{{ enviandoFormulario ? (modoEdicion ? 'Actualizando...' : 'Guardando...') : (modoEdicion ?
+                    'Actualizar Producto' : 'Guardar Producto') }}</span>
+            </button>
+        </div>
+    </form>
+</div>

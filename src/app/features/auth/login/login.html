@@ -1,0 +1,83 @@
+<div class="h-screen flex items-center justify-center lg:py-20 py-10 md:py-15 px-6 lg:px-20 md:px-13 bg-slate-100">
+    <div class="bg-white rounded-2xl lg:max-w-4xl md:max-w-xl sm:max-w-lg w-full overflow-hidden shadow-2xl border border-zinc-200">
+        <div class="grid lg:grid-cols-2 grid-cols-1">
+            <div class="bg-gradient-to-l from-blue-400 to-blue-800 p-8 lg:p-12 lg:flex items-center hidden">
+                <div class="text-center">
+                    <img src="assets/IMG/inicio_sesion.png" alt="img_login" class="object-cover img-fluid"/>
+                    <!-- <h2 class="texto-grande font-bold text-white mb-4 mt-8">
+                        Bienvenido de vuelta
+                    </h2>
+                    <p class="text-zinc-300 texto-pequeño">
+                        Accede a tu cuenta para gestionar tu negocio
+                    </p> -->
+                </div>
+            </div>
+
+            <div class="p-8 lg:p-10">
+            
+                <div class="text-center mb-10">
+                    <h1 class="texto-titulo font-bold mb-4">
+                        Iniciar Sesión
+                    </h1>
+                    <p class="text-zinc-600 texto-pequeño">
+                        Ingresa tus credenciales para continuar
+                    </p>
+                </div>
+
+                <form class="gap-7 flex flex-col">
+                    <div>
+                        <label class="label-formulario texto-pequeño">
+                            Correo electrónico
+                        </label>
+                        <div class="relative">
+                            <input type="email" class="input-formulario pr-12 texto-pequeño"
+                                placeholder="ejemplo@gmail.com">
+                            <i class="fas fa-envelope texto-pequeño icono-input"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="label-formulario texto-pequeño">
+                            Contraseña
+                        </label>
+                        <div class="relative">
+                            <input [type]="verPassword ? 'text' : 'password'" class="input-formulario texto-pequeño"
+                                placeholder="•••••••">
+                            <button type="button" (click)="toggleVerPassword()"
+                                class="icono-input hover:text-zinc-500 transition-colors duration-300">
+                                <i class="texto-pequeño fas" [ngClass]="verPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-center">
+                        <label class="flex items-center">
+                            <input type="checkbox"
+                                class="w-4 h-4 text-blue-600 bg-zinc-700 border-zinc-600 rounded">
+                            <span class="ml-2 texto-pequeño text-zinc-600">Recordarme</span>
+                        </label>
+
+                        <a href="#"
+                            class="texto-pequeño text-blue-500 hover:text-blue-700 transition-colors duration-300">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn btn-azul mt-4">
+                        Ingresar
+                    </button>
+
+                    <!-- <div class="text-start ">
+                        <p class="texto-pequeño text-zinc-500">
+                            ¿No tienes una cuenta?
+                            <a routerLink="/registro"
+                                class="text-center sm:ms-5 ms:0 text-blue-500 hover:text-blue-700 transition-colors duration-300 font-medium">
+                                Registrarse
+                            </a>
+                        </p>
+                    </div> -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

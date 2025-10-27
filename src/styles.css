@@ -2,39 +2,100 @@
 
 @layer components {
 
-  /*LETRAS*/
-  .titulo{
-    @apply text-2xl md:text-4xl lg:text-5xl font-bold leading-normal;
+  .texto-titulo{
+    @apply text-2xl md:text-3xl font-bold leading-normal;
   }
   .texto-grande{
-    @apply text-xl md:text-2xl lg:text-3xl font-bold leading-normal;
+    @apply text-xl md:text-2xl font-bold leading-normal;
   }
-  .texto-normal{
+  .texto-intermedio{
     @apply text-lg md:text-xl leading-normal;
   }
-
+  .texto-normal{  
+    @apply text-base md:text-lg leading-normal;
+  }
   .texto-mediano{
-    @apply text-base md:text-lg leading-normal
+    @apply text-sm md:text-base leading-normal
+  }
+  .texto-pequeño{
+    @apply text-xs md:text-sm leading-normal;
+  }
+  .texto-chico{
+    @apply text-[10px] md:text-xs leading-normal;
   }
 
-  .texto-pequeño{
-    @apply text-sm md:text-base leading-normal;
+  /* FORMULARIO */
+  .label-formulario{
+    @apply block mb-2 text-[10px] md:text-xs leading-normal font-medium text-zinc-700;
+  }
+  .input-formulario{
+    @apply bg-white w-full px-4 py-3 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none;
+  }
+  .icono-input {
+    @apply absolute right-4 top-1/2 transform -translate-y-1/2 text-zinc-600;
+  }
+
+  /*TABLAS*/
+  .th-tabla {
+    @apply p-5 font-semibold uppercase tracking-wider;
+  }
+  .td1-tabla {
+    @apply py-3 px-3 text-zinc-800 font-medium;
+  }
+  .td2-tabla {
+    @apply py-3 px-3 text-zinc-600;
+  }
+
+  /*BADGES*/
+  .badge-gerente {
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-purple-100 text-purple-700;
+  }
+  .badge-supervisor {
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-cyan-100 text-cyan-700;
+  }
+  .badge-vendedor{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-green-100 text-green-700;
+  }
+  .badge-administrativo{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-orange-100 text-orange-700;
+  }
+  .badge-empleado{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-blue-100 text-blue-700;
+  }
+  .badge-amarillo{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-yellow-100 text-yellow-700;
+  }
+  .badge-azul{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-blue-100 text-blue-700;
+  }
+  .badge-rojo{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-red-100 text-red-700;
+  }
+  .badge-verde{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-green-100 text-green-700;
   }
   
-  /* Botón base */
+  /* BOTONES*/
   .btn {
-    @apply px-8 py-4 text-sm md:text-base text-white font-semibold rounded-xl hover:scale-105 transition-all duration-200;
+    @apply px-6 py-3 text-xs md:text-sm text-white font-semibold rounded-xl hover:scale-105 transition-all duration-200;
   }
-
-  /* Variantes */
   .btn-rojo {
     @apply bg-gradient-to-r from-red-700 to-red-500;
   }
-
   .btn-azul {
     @apply bg-gradient-to-r from-blue-500 to-blue-700;
   }
-  
+  .btn-gris {
+    @apply bg-gradient-to-r from-zinc-500 to-zinc-700;
+  }
+  .btn-editar {
+    @apply text-blue-600 hover:text-blue-800 transition-colors p-2 hover:bg-blue-100 rounded-lg cursor-pointer
+  }
+
+  /*SIDEBAR*/
+  .sidebar {
+    @apply flex items-center space-x-3 px-3 py-3 hover:bg-zinc-700/70 rounded-lg font-medium
+  }
 }
 
 *{

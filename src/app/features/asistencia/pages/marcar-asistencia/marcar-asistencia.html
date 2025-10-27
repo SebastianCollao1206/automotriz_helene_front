@@ -1,5 +1,5 @@
 <div class="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-100">
-    <div class="text-center mb-8">
+    <div class="text-center mb-8 mt-4 lg:mt-0">
         <h1 class="texto-grande">
             <i class="far fa-calendar-alt text-zinc-600 mx-5"></i> Sistema de control de Asistencia
         </h1>
@@ -10,7 +10,7 @@
             <div [ngClass]="{
                 'bg-gradient-to-l from-zinc-400 to-zinc-700': !mostrarContador,
                 'bg-gradient-to-r from-green-700 to-green-400': mostrarContador
-            }" class="mb-5 p-5 text-white texto-mediano font-semibold rounded-2xl transition-all flex items-center">
+            }" class="mb-5 p-5 text-white texto-mediano font-medium rounded-2xl transition-all flex items-center">
                 {{ mensajeInstruccion }}
 
                 <div *ngIf="mostrarContador" class="texto-grande mx-auto text-center ">
@@ -23,7 +23,7 @@
                     <video #videoElement autoplay muted playsinline
                         class="w-full aspect-video object-cover espejo"></video>
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div class="w-43 h-48 rounded-full border-3 border-green-500 opacity-80"></div>
+                        <div class="md:w-43 md:h-48 w-23 h-28 rounded-full border-3 border-green-500 opacity-80"></div>
                     </div>
                 </div>
             </div>
@@ -50,15 +50,15 @@
 
             <div class="p-5 flex-1">
                 <ul class="space-y-4 text-zinc-700">
-                    <li class="flex items-start">
+                    <li class="flex items-start texto-mediano">
                         <i class="fas fa-info-circle text-blue-500 mr-3 mt-1"></i>
                         <span>Sigue las indicaciones</span>
                     </li>
-                    <li class="flex items-start">
+                    <li class="flex items-start texto-mediano">
                         <i class="fas fa-sun text-yellow-500 mr-3 mt-1"></i>
                         <span>Asegúrate de tener buena iluminación</span>
                     </li>
-                    <li class="flex items-start">
+                    <li class="flex items-start texto-mediano">
                         <i class="fas fa-users-slash text-red-500 mr-3 mt-1"></i>
                         <span>Verifica que no haya más personas en la cámara</span>
                     </li>
@@ -71,4 +71,5 @@
         </div>
     </div>
 </div>
+
 

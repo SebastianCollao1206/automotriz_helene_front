@@ -1,0 +1,114 @@
+<div class="container p-5 mx-auto">
+    <div class="flex flex-col justify-center w-full">
+        <h2 class="texto-grande flex justify-center">Asistencia diaria</h2>
+        <p class="texto-pequeño text-zinc-600 flex justify-center">Control de asistencias de todos los empleados</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-8">
+        <div class="rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="texto-pequeño font-medium text-zinc-600">Total</p>
+                    <p class="texto-titulo font-bold text-zinc-800 mt-1">8</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-lg flex justify-center items-center">
+                    <i class="fas fa-users text-blue-600 texto-intermedio"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-xl shadow-sm border border-green-200 p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="texto-pequeño font-medium text-zinc-600">Presentes</p>
+                    <p class="texto-titulo font-bold text-green-600 mt-1">4</p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-lg flex justify-center items-center">
+                    <i class="fas fa-circle-check text-green-600 texto-intermedio"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-yellow-200 p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="texto-pequeño font-medium text-zinc-600">Tardanzas</p>
+                    <p class="texto-titulo font-bold text-yellow-600 mt-1">2</p>
+                </div>
+                <div class="bg-yellow-100 p-3 rounded-lg flex justify-center items-center">
+                    <i class="fas fa-clock text-yellow-600 texto-intermedio"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-red-200 p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="texto-pequeño font-medium text-zinc-600">Ausentes</p>
+                    <p class="texto-titulo font-bold text-red-600 mt-1">2</p>
+                </div>
+                <div class="bg-red-100 p-3 rounded-lg flex justify-center items-center">
+                    <i class="fas fa-circle-xmark text-red-600 texto-intermedio"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-8 py-2">
+        <div class="rounded-xl shadow-lg border border-zinc-200 p-6">
+            <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+
+                <div class="flex sm:flex-row flex-col items-center gap-3 sm:p-4 p-0">
+                    <div class="flex">
+                        <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors">
+                            <i class="fas fa-chevron-left text-zinc-600"></i>
+                        </button>
+
+                        <div class="bg-zinc-100 px-6 py-3 mx-2 rounded-lg border border-zinc-200 min-w-max">
+                            <p class="texto-pequeño font-semibold text-zinc-800" id="dateDisplay">
+                                Lunes, 21 octubre 2025
+                            </p>
+                        </div>
+
+                        <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors">
+                            <i class="fas fa-chevron-right text-zinc-600"></i>
+                        </button>
+                    </div>
+
+                    <button class="btn btn-azul">
+                        Hoy
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 w-full lg:w-auto">
+                    <div>
+                        <label class="label-formulario">
+                            <i class="fas fa-user text-zinc-500 mr-2"></i>
+                            Buscar por nombre
+                        </label>
+                        <input type="text" id="filterName" placeholder="Ingresa un nombre..."
+                            class="texto-pequeño input-formulario">
+                    </div>
+                    <div>
+                        <label class="label-formulario">
+                            <i class="fas fa-circle-dot text-zinc-500 mr-2"></i>
+                            Estado
+                        </label>
+                        <div class="relative inline-block w-full">
+                            <select class="texto-pequeño input-formulario appearance-none">
+                                <option>Todos</option>
+                                <option>Presente</option>
+                                <option>Tardanza</option>
+                                <option>Ausente</option>
+                            </select>
+                            <i class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Lista de empleados -->
+    <app-asistencia-table></app-asistencia-table>
+
+</div>

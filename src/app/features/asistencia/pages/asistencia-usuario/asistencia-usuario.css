@@ -1,0 +1,78 @@
+/* Estilos personalizados para FullCalendar */
+
+::ng-deep .calendar-container .fc {
+  border: none;
+}
+
+::ng-deep .calendar-container .fc-theme-standard td,
+::ng-deep .calendar-container .fc-theme-standard th {
+  border-color: #e2e8f0;
+}
+
+::ng-deep .calendar-container .fc-col-header-cell {
+  background-color: #f8fafc;
+  padding: 16px 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #475569;
+}
+
+::ng-deep .calendar-container .fc-daygrid-day {
+  height: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+::ng-deep .calendar-container .fc-daygrid-day-number {
+  padding: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+::ng-deep .calendar-container .fc-day-today {
+  background-color: #dbeafe !important;
+}
+
+::ng-deep .calendar-container .fc-day-other {
+  background-color: #fafafa;
+  opacity: 0.5;
+}
+
+::ng-deep .calendar-container .fc-day-sat,
+::ng-deep .calendar-container .fc-day-sun {
+  background-color: #f8fafc;
+}
+
+::ng-deep .calendar-container .fc-daygrid-day-frame {
+  min-height: 80px;
+}
+
+/* Eventos de asistencia */
+::ng-deep .calendar-container .attendance-event {
+  opacity: 0.3;
+  border: none;
+  margin: 0;
+}
+
+::ng-deep .calendar-container .fc-daygrid-day:hover .attendance-event {
+  opacity: 0.5;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calendar-container {
+  animation: fadeIn 0.3s ease-out;
+}

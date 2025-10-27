@@ -1,0 +1,111 @@
+<div class="container p-5 mx-auto">
+    <div class="flex justify-center">
+        <h2 class="texto-grande">Lista de Usuarios</h2>
+    </div>
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando datos...</span>
+    </div>
+    <div *ngIf="!cargandoDatos">
+        <div class="mx-auto p-8">
+            <div class="flex items-center gap-2 texto-mediano cursor-pointer" [class.mb-5]="filtrosVisibles"
+                (click)="alternarFiltros()">
+                <i class="fas fa-filter text-zinc-600"></i>
+                <h3 class="font-semibold text-zinc-800 mr-2">Filtros</h3>
+                <i class="fas fa-chevron-down text-zinc-500 transition-transform duration-100"
+                    [class.rotate-180]="!filtrosVisibles"></i>
+            </div>
+            <div class="filtros-contenedor transition-all duration-300 ease-in-out overflow-hidden shadow-lg rounded-2xl"
+                [class.filtros-ocultos]="!filtrosVisibles">
+                <div class="bg-white p-6 border rounded-2xl border-zinc-200">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-user text-zinc-500 mr-2"></i>
+                                Buscar por nombre
+                            </label>
+                            <input type="text" [(ngModel)]="filtroNombre" (ngModelChange)="aplicarFiltros()"
+                                placeholder="Ingresa un nombre..." class="texto-pequeño input-formulario">
+                        </div>
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-circle-dot text-zinc-500 mr-2"></i>
+                                Estado
+                            </label>
+                            <div class="relative inline-block w-full">
+                                <select [(ngModel)]="filtroEstado" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario appearance-none">
+                                    <option value="">Todos</option>
+                                    <option value="true">Activo</option>
+                                    <option value="false">Inactivo</option>
+                                </select>
+                                <i
+                                    class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-user-tag text-zinc-500 mr-1"></i>
+                                Rol
+                            </label>
+                            <div class="relative inline-block w-full">
+                                <select [(ngModel)]="filtroRol" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario appearance-none">
+                                    <option value="">Todos los roles</option>
+                                    <option *ngFor="let role of roles" [value]="role.name">
+                                        {{ getRoleName(role.name) }}
+                                    </option>
+                                </select>
+                                <i
+                                    class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <button class="btn btn-gris" (click)="limpiarFiltros()">
+                                <i class="fas fa-times mr-2"></i>
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!cargandoDatos">
+        <div class="mx-auto px-8 py-2">
+            <div class="rounded-2xl border border-zinc-200 overflow-hidden shadow-lg">
+                <app-users-table [usuarios]="usuariosPaginados" (editarUsuario)="onEditarUsuario($event)"
+                    (cambiarEstado)="onCambiarEstado($event)">
+                </app-users-table>
+                <div
+                    class="bg-zinc-100 px-3 md:px-6 lg:px-12 py-4 border-t border-zinc-200 flex flex-col sm:flex-row justify-between gap-4 items-center">
+                    <div class="texto-pequeño text-zinc-700">
+                        Mostrando: <span class="font-semibold">{{ usuariosPaginados.length }}</span>
+                        de <span class="font-semibold">{{ usuariosFiltrados.length }}</span> usuario{{
+                        usuariosFiltrados.length !== 1 ? 's' : '' }}
+                    </div>
+                    <div class="flex space-x-1 sm:space-x-2 lg:space-x-3 texto-pequeño">
+                        <button
+                            class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === 1" (click)="paginaAnterior()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button *ngFor="let pagina of paginasArray"
+                            [class]="paginaActual === pagina 
+                    ? 'px-3 py-1 bg-zinc-500 hover:bg-zinc-600 text-white rounded transition-colors duration-200 cursor-pointer'
+                    : 'px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer'"
+                            (click)="cambiarPagina(pagina)">
+                            {{ pagina }}
+                        </button>
+                        <button
+                            class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === totalPaginas || totalPaginas === 0"
+                            (click)="paginaSiguiente()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

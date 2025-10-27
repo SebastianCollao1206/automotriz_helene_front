@@ -1,0 +1,83 @@
+<div class="overflow-x-auto">
+    <table class="w-full">
+        <thead class="border-b border-zinc-200">
+            <tr class="bg-zinc-100 text-center">
+                <th class="texto-pequeño th-tabla">Imagen</th>
+                <th class="texto-pequeño th-tabla">Nombre</th>
+                <th class="texto-pequeño th-tabla">Tamaño</th>
+                <th class="texto-pequeño th-tabla">Stock</th>
+                <th class="texto-pequeño th-tabla">Precio</th>
+                <th class="texto-pequeño th-tabla">Estado</th>
+                <th class="texto-pequeño th-tabla">Marca</th>
+                <th class="texto-pequeño th-tabla">Categoría</th>
+                <th class="texto-pequeño th-tabla">Tipo</th>
+                <th class="texto-pequeño th-tabla">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-200">
+            <tr *ngFor="let producto of productos; trackBy: trackByProductId"
+                class="hover:bg-zinc-100 transition-colors duration-200 text-center"
+                [class.opacity-50]="!producto.enabled">
+                <td class="py-3 px-3">
+                    <img [src]="obtenerUrlImagen(producto.imagen)" [alt]="producto.nombre"
+                        class="w-12 h-12 object-cover rounded-lg mx-auto">
+                </td>
+                <td class="texto-pequeño td1-tabla">
+                    {{ producto.nombre }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    {{ producto.cantidadTamanio }} {{ producto.unidadMedida }}
+                </td>
+                <td class="py-3 px-3">
+                    <span [class]="getStockBadgeClass(producto.stock) + ' texto-chico'">
+                        {{ producto.stock }}
+                    </span>
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    S/ {{ producto.precioVenta | number:'1.2-2' }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    <span *ngIf="producto.enabled" class="text-green-600 font-semibold inline-flex items-center gap-2">
+                        <i class="fas fa-circle md:text-[8px] text-[6px]"></i>Activo
+                    </span>
+                    <span *ngIf="!producto.enabled" class="text-red-600 font-semibold inline-flex items-center gap-2">
+                        <i class="fas fa-circle md:text-[8px] text-[6px]"></i>Inactivo
+                    </span>
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    {{ producto.marca }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    {{ producto.categoria }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    {{ producto.tipoProducto }}
+                </td>
+                <td class="py-3 px-3">
+                    <div class="flex justify-center items-center gap-2">
+                        <button class="btn-editar" (click)="onEditarClick(producto.id)"
+                            [attr.aria-label]="'Editar producto ' + producto.nombre">
+                            <i class="fas fa-edit texto-mediano"></i>
+                        </button>
+                        <button (click)="onToggleEstado(producto)"
+                            [attr.aria-label]="(producto.enabled ? 'Desactivar' : 'Activar') + ' producto ' + producto.nombre"
+                            [class]="producto.enabled 
+                                        ? 'relative inline-flex h-5 w-9 items-center rounded-full bg-green-500 transition-colors hover:bg-green-600 cursor-pointer'
+                                        : 'relative inline-flex h-5 w-9 items-center rounded-full bg-zinc-300 transition-colors hover:bg-zinc-400 cursor-pointer'">
+                            <span
+                                [class]="producto.enabled
+                                            ? 'inline-block h-3 w-3 transform rounded-full bg-white transition-transform translate-x-5'
+                                            : 'inline-block h-3 w-3 transform rounded-full bg-white transition-transform translate-x-1'">
+                            </span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="productos.length === 0" class="bg-zinc-50 px-6 py-12 text-center text-zinc-500 texto-pequeño">
+    <i class="fas fa-inbox text-4xl mb-3 text-zinc-400"></i>
+    <p>No se encontraron productos</p>
+</div>

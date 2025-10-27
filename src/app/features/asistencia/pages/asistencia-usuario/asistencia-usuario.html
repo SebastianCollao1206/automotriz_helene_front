@@ -1,0 +1,144 @@
+<div class="container p-5 mx-auto">
+    <div class="w-full mx-auto">
+        <!-- Header -->
+        <!-- <div class="flex flex-col justify-center w-full">
+            <h2 class="texto-grande flex justify-center">Asistencia diaria</h2>
+            <p class="texto-pequeño text-zinc-600 flex justify-center">Control de asistencias de todos los empleados</p>
+        </div> -->
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-8">
+            <!-- Panel Izquierdo: Calendario -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-xl border border-zinc-200 overflow-hidden">
+                    <div class="p-6 border-b border-zinc-200 bg-zinc-100">
+                        <div class="flex items-center justify-between">
+
+                            <div class="flex items-center">
+
+                                <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors">
+                                    <i class="fas fa-chevron-left text-zinc-600"></i>
+                                </button>
+
+                                <div class="px-6 py-3  min-w-max">
+                                    <p class="texto-pequeño font-semibold text-zinc-800" id="dateDisplay">
+                                        Lunes, 21 octubre 2025
+                                    </p>
+                                </div>
+
+                                <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors">
+                                    <i class="fas fa-chevron-right text-zinc-600"></i>
+                                </button>
+                            </div>
+
+                            <button class="btn btn-azul">
+                                Hoy
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Calendario -->
+                    <div class="p-6 calendar-container">
+                        <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+                    </div>
+
+                    <!-- Leyenda -->
+                    <div class="p-6 border-t border-zinc-200 bg-zinc-100">
+                        <p class="texto-pequeño font-semibold text-zinc-700 mb-4">Leyenda:</p>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 bg-green-500 rounded"></div>
+                                <span class="texto-pequeño text-zinc-600">Presente</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 bg-yellow-500 rounded"></div>
+                                <span class="texto-pequeño text-zinc-600">Tardanza</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 bg-red-500 rounded"></div>
+                                <span class="texto-pequeño text-zinc-600">Ausente</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 bg-white border border-zinc-300 rounded"></div>
+                                <span class="texto-pequeño text-zinc-600">Fin de semana</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Panel Derecho: Estadísticas y Detalles -->
+            <div class="space-y-6">
+                <!-- Información del Empleado -->
+                <div class="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold texto-grande">
+                            S
+                        </div>
+                        <div class="">
+                            <h3 class="text-xl font-bold text-zinc-800">Sebastian Collao Salas</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas del Mes -->
+                <div class="bg-white rounded-lg shadow-xl border border-slate-200 p-6">
+                    <h3 class="texto-normal font-bold text-zinc-800 mb-4">Estadísticas del Mes</h3>
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="texto-pequeño font-medium text-zinc-600">Asistencia</span>
+                            <span class="texto-grande font-bold text-blue-600">60%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                            <div
+                                class="w-60 bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-500">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div
+                            class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-check texto-normal text-white"></i>
+                                </div>
+                                <span class="font-medium text-zinc-700">Presente</span>
+                            </div>
+                            <span class="texto-intermedio font-bold text-green-600">12</span>
+                        </div>
+
+                        <div
+                            class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-clock texto-normal text-white"></i>
+                                </div>
+                                <span class="font-medium text-zinc-700">Tardanzas</span>
+                            </div>
+                            <span class="texto-intermedio font-bold text-yellow-600">{{stats.late}}</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-xmark texto-normal text-white"></i>
+                                </div>
+                                <span class="font-medium text-zinc-700">Ausentes</span>
+                            </div>
+                            <span class="texto-intermedio font-bold text-red-600">{{stats.absent}}</span>
+                        </div>
+
+                        <div class="border-t border-zinc-400 mt-8">
+                            <div
+                                class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-zinc-200 mt-4 pt-4">
+                                <span class="font-semibold text-zinc-700">Total de días</span>
+                                <span class="text-xl font-bold text-zinc-800">20</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

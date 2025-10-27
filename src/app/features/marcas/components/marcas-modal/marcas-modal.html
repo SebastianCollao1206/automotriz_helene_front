@@ -1,0 +1,61 @@
+<div *ngIf="mostrar" class="fixed inset-0 bg-zinc-700/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    (click)="cerrar()">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full" (click)="$event.stopPropagation()">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-4 rounded-t-2xl">
+            <div class="flex justify-between items-center">
+                <h3 class="texto-mediano font-semibold text-white">
+                    <i class="fas mr-2" [class.fa-plus-circle]="!modoEdicion" [class.fa-edit]="modoEdicion"></i>
+                    {{ modoEdicion ? 'Editar Marca' : 'Nueva Marca' }}
+                </h3>
+                <button type="button" (click)="cerrar()" [disabled]="enviando"
+                    class="text-white hover:text-gray-200 transition-colors disabled:opacity-50">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <form [formGroup]="formulario" (ngSubmit)="enviarFormulario()" class="p-6 space-y-5">
+            <div>
+                <label class="label-formulario">
+                    Nombre de la marca
+                </label>
+                <input class="input-formulario" type="text" formControlName="nombre"
+                    [class]="validacionFormulario.obtenerClasesCampo(formulario, 'nombre')"
+                    placeholder="Ej: Liqui Moly, Repsol, etc." maxlength="50">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formulario, 'nombre')" class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formulario, 'nombre', 'El nombre') }}
+                </p>
+            </div>
+
+            <div *ngIf="modoEdicion">
+                <label class="label-formulario">
+                    Estado
+                </label>
+                <div class="relative inline-block w-full">
+                    <select formControlName="enabled"
+                        class="texto-pequeño input-formulario appearance-none cursor-pointer">
+                        <option [value]="true">Activo</option>
+                        <option [value]="false">Inactivo</option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" (click)="cerrar()" [disabled]="enviando"
+                    class="btn btn-gris disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancelar
+                </button>
+                <button type="submit" [disabled]="formulario.invalid || enviando"
+                    [class]="formulario.invalid || enviando ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'">
+                    <i class="fas mr-2" [class.fa-spinner]="enviando" [class.fa-spin]="enviando"
+                        [class.fa-save]="!enviando"></i>
+                    {{ enviando ? (modoEdicion ? 'Actualizando...' : 'Guardando...') : (modoEdicion ? 'Actualizar' :
+                    'Guardar') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

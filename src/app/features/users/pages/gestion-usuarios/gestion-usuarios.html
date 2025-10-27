@@ -1,0 +1,15 @@
+<div class="container p-5 mx-auto">
+    <div class="flex justify-center">
+        <h2 class="texto-grande">{{ modoEdicion ? 'Editar Usuario' : 'Agregar Usuario' }}</h2>
+    </div>
+
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando datos...</span>
+    </div>
+
+    <app-users-form *ngIf="!cargandoDatos" [modoEdicion]="modoEdicion" [usuarioId]="usuarioId"
+        [usuarioData]="usuarioData" (alEnviarFormulario)="alCrearUsuario($event)"
+        (alActualizarFormulario)="alActualizarUsuario($event)">
+    </app-users-form>
+</div>

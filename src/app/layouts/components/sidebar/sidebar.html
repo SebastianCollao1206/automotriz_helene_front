@@ -1,0 +1,65 @@
+<aside class="bg-zinc-800 h-full rounded-2xl text-white sticky top-0 animate-slide-in shadow-2xl">
+
+    <!-- Logo -->
+    <div class="flex items-center justify-center" [class.px-0]="collapsed">
+        <img *ngIf="!collapsed" class="w-40 mt-5 lg:flex hidden" src="assets/IMG/logo2.png" alt="">
+        <img *ngIf="collapsed" class="p-5 ms-3" src="assets/IMG/logo_pequeño.png" alt="">
+    </div>
+
+    <div *ngIf="!collapsed" class="lg:hidden px-6 py-4 border-b border-zinc-200">
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <img src="https://www.pngkey.com/png/full/12-123249_teacher-teacher-login.png" alt="Avatar"
+                    class="w-12 h-12 rounded-full">
+                <div>
+                    <p class="texto-pequeño font-medium">Sebastian Collao Salas</p>
+                    <p class="texto-chico text-zinc-400">Administrador</p>
+                </div>
+            </div>
+
+            <button (click)="onClose()"
+                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-zinc-700 transition-colors cursor-pointer">
+                <i class="fas fa-times texto-mediano"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <nav class="p-6">
+        <p class="texto-chico text-zinc-100 mb-4">MENU</p>
+        <ul class="space-y-6">
+            <li>
+                <a href="#" class="texto-pequeño sidebar flex items-center gap-4" [class.justify-center]="collapsed">
+                    <i class="fas fa-calendar"></i>
+                    <span *ngIf="!collapsed" class="font-medium">Calendar</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="texto-pequeño sidebar flex items-center gap-4" [class.justify-center]="collapsed">
+                    <i class="fas fa-user"></i>
+                    <span *ngIf="!collapsed" class="font-medium">Usuarios</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="texto-pequeño sidebar flex items-center gap-4" [class.justify-center]="collapsed">
+                    <i class="fas fa-user"></i>
+                    <span *ngIf="!collapsed" class="font-medium">Usuarios</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="texto-pequeño sidebar flex items-center gap-4" [class.justify-center]="collapsed">
+                    <i class="fas fa-user"></i>
+                    <span *ngIf="!collapsed" class="font-medium">Usuarios</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div *ngIf="!collapsed" class="lg:hidden absolute bottom-6 flex w-full justify-center">
+        <button
+            class="btn btn-rojo">
+            <i class="fa-solid fa-right-from-bracket mx-2"></i> Cerrar Sesión
+        </button>
+    </div>
+</aside>

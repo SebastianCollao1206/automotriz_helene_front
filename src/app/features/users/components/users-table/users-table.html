@@ -1,0 +1,62 @@
+<div class="overflow-x-auto">
+    <table class="w-full">
+        <thead class="border-b border-zinc-200">
+            <tr class="bg-zinc-100 text-center">
+                <th class="texto-pequeño th-tabla">Nombre</th>
+                <th class="texto-pequeño th-tabla">Correo</th>
+                <th class="texto-pequeño th-tabla">Estado</th>
+                <th class="texto-pequeño th-tabla">Roles</th>
+                <th class="texto-pequeño th-tabla">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-200">
+            <tr *ngFor="let usuario of usuarios; trackBy: trackByUserId"
+                class="hover:bg-zinc-100 transition-colors duration-200 text-center"
+                [class.opacity-50]="!usuario.enabled">
+                <td class="texto-pequeño td1-tabla">
+                    {{ usuario.nombre }}
+                </td>
+                <td class="td2-tabla texto-pequeño">{{ usuario.email }}</td>
+                <td class="py-3 px-3 texto-pequeño">
+                    <span *ngIf="usuario.enabled" class="text-green-600 font-semibold inline-flex items-center gap-2">
+                        <i class="fas fa-circle md:text-[8px] text-[6px]"></i>Activo
+                    </span>
+                    <span *ngIf="!usuario.enabled" class="text-red-600 font-semibold inline-flex items-center gap-2">
+                        <i class="fas fa-circle md:text-[8px] text-[6px]"></i>Inactivo
+                    </span>
+                </td>
+                <td class="py-3 px-3">
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <span *ngFor="let role of usuario.roles" [class]="getRoleBadgeClass(role) + ' texto-chico'">
+                            {{ getRoleName(role) }}
+                        </span>
+                    </div>
+                </td>
+                <td class="py-3 px-3">
+                    <div class="flex justify-center items-center gap-2">
+                        <button class="btn-editar" (click)="onEditarClick(usuario.id)"
+                            [attr.aria-label]="'Editar usuario ' + usuario.nombre">
+                            <i class="fas fa-edit texto-mediano"></i>
+                        </button>
+                        <button (click)="onToggleEstado(usuario)"
+                            [attr.aria-label]="(usuario.enabled ? 'Desactivar' : 'Activar') + ' usuario ' + usuario.nombre"
+                            [class]="usuario.enabled 
+                                        ? 'relative inline-flex h-5 w-9 items-center rounded-full bg-green-500 transition-colors hover:bg-green-600 cursor-pointer'
+                                        : 'relative inline-flex h-5 w-9 items-center rounded-full bg-zinc-300 transition-colors hover:bg-zinc-400 cursor-pointer'">
+                            <span
+                                [class]="usuario.enabled
+                                            ? 'inline-block h-3 w-3 transform rounded-full bg-white transition-transform translate-x-5'
+                                            : 'inline-block h-3 w-3 transform rounded-full bg-white transition-transform translate-x-1'">
+                            </span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="usuarios.length === 0" class="bg-zinc-50 px-6 py-12 text-center text-zinc-500 texto-pequeño">
+    <i class="fas fa-inbox text-4xl mb-3 text-zinc-400"></i>
+    <p>No se encontraron usuarios</p>
+</div>
