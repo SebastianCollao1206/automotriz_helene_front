@@ -94,7 +94,7 @@
 
   /*SIDEBAR*/
   .sidebar {
-    @apply flex items-center space-x-3 px-3 py-3 hover:bg-zinc-700/70 rounded-lg font-medium
+    @apply flex items-center space-x-1 px-3 py-3 hover:bg-zinc-700/70 rounded-lg font-medium
   }
 }
 

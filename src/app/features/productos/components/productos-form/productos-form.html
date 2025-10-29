@@ -194,7 +194,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
             <div>
                 <label class="label-formulario">Descripción <span class="text-red-500">*</span></label>
-                <textarea formControlName="descripcion" rows="3"
+                <textarea formControlName="descripcion" rows="8"
                     [class]="validacionFormulario.obtenerClasesCampo(formularioProducto, 'descripcion')"
                     placeholder="Ingrese una descripción del producto"></textarea>
                 <p *ngIf="validacionFormulario.esCampoInvalido(formularioProducto, 'descripcion')"
@@ -208,12 +208,12 @@
                 </label>
                 <div
                     class="input-formulario flex flex-col items-center justify-center max-h-60 hover:border-blue-500 border-2 border-dashed rounded-lg cursor-pointer transition-colors">
-                    <div class="relative w-full h-50 flex items-center justify-center">
+                    <div class="relative w-full h-42 flex items-center justify-center">
                         <label for="fileInput"
                             class="w-full h-full flex flex-col items-center justify-center cursor-pointer">
                             <div *ngIf="urlImagenSeleccionada" class="relative">
                                 <img [src]="urlImagenSeleccionada" alt="Preview"
-                                    class="max-w-full max-h-45 object-contain rounded-lg">
+                                    class="max-w-full max-h-40 object-contain rounded-lg">
                                 <button type="button" (click)="eliminarImagen(); $event.preventDefault()"
                                     class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors">
                                     <i class="fas fa-times text-xs"></i>
@@ -236,7 +236,11 @@
                 </p>
             </div>
         </div>
-        <div class="flex justify-center pt-4">
+        <div class="flex justify-center pt-4 gap-6">
+            <button type="button" class="btn btn-gris" (click)="volverAListaProductos()">
+                <i class="fas fa-arrow-left mx-2"></i>
+                Volver
+            </button>
             <button type="submit"
                 [disabled]="formularioProducto.invalid || cargandoCategorias || cargandoMarcas || cargandoUnidades || cargandoTipos || enviandoFormulario"
                 [class]="formularioProducto.invalid || cargandoCategorias || cargandoMarcas || cargandoUnidades || cargandoTipos || enviandoFormulario ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'">

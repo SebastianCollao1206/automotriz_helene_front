@@ -144,7 +144,11 @@
                 </p>
             </div>
         </div>
-        <div class="flex justify-center pt-4">
+        <div class="flex justify-center pt-4 gap-6">
+            <button type="button" class="btn btn-gris" (click)="volverAListaUsuarios()">
+                <i class="fas fa-arrow-left mx-2"></i>
+                Volver
+            </button>
             <button type="submit" [disabled]="formularioUsuario.invalid || cargandoRoles || enviandoFormulario"
                 [class]="formularioUsuario.invalid || cargandoRoles || enviandoFormulario ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'">
                 <i class="fas mx-3" [class.fa-save]="!modoEdicion" [class.fa-edit]="modoEdicion"></i>

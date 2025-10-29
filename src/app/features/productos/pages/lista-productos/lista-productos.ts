@@ -90,6 +90,10 @@ export class ListaProductos implements OnInit {
       });
   }
 
+  onAgregarProducto(): void {
+    this.router.navigate(['/productos/agregar']);
+  }
+
   alternarFiltros(): void {
     this.filtrosVisibles = !this.filtrosVisibles;
   }
@@ -170,7 +174,7 @@ export class ListaProductos implements OnInit {
   }
 
   onEditarProducto(id: number): void {
-    this.router.navigate(['/producto/editar', id]);
+    this.router.navigate(['/productos/editar', id]);
   }
 
   onCambiarEstado(evento: { id: number; enabled: boolean }): void {

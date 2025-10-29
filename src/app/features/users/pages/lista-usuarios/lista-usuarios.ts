@@ -10,9 +10,10 @@ import { RoleModel } from '../../../../models/role';
 import { finalize } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import { ROLE_NAMES } from '../../../../core/constants/roles-constants';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormDataLoader } from '../../../../core/services/loaders/form-data-loader';
 import { Paginacion, ResultadoPaginacion } from '../../../../core/services/paginacion/paginacion';
+import { AuthService } from '../../../../core/services/auth/auth-service';
 
 @Component({
   selector: 'app-lista-usuarios',
@@ -37,6 +38,8 @@ export class ListaUsuarios implements OnInit {
   itemsPorPagina = 6;
   totalPaginas = 0;
 
+  usuarioLogueadoId: number | null = null;
+
   Math = Math;
 
   get usuariosPaginados(): UserResponse[] {
@@ -53,11 +56,20 @@ export class ListaUsuarios implements OnInit {
     private userService: User,
     private formDataLoader: FormDataLoader,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.obtenerUsuarioLogueado();
     this.cargarDatos();
+  }
+
+  private obtenerUsuarioLogueado(): void {
+    const usuarioActual = this.authService.obtenerUsuarioActual();
+    if (usuarioActual) {
+      this.usuarioLogueadoId = usuarioActual.id;
+    }
   }
 
   private cargarDatos(): void {
@@ -148,7 +160,11 @@ export class ListaUsuarios implements OnInit {
   }
 
   onEditarUsuario(id: number): void {
-    this.router.navigate(['/usuario/editar', id]);
+    this.router.navigate(['/usuarios/editar', id]);
+  }
+
+  onAgregarUsuario(): void {
+    this.router.navigate(['/usuarios/agregar']);
   }
 
   onCambiarEstado(evento: { id: number; enabled: boolean }): void {

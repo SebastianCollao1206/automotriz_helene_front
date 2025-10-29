@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth/auth-service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -7,12 +9,42 @@ import { CommonModule } from '@angular/common';
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class Header {
+export class Header implements OnInit, OnDestroy {
+
   @Output() toggleSidebar = new EventEmitter<void>();
 
   isNotificationsOpen = false;
-
   isLogoutOpen = false;
+
+  nombreCompleto: string = '';
+  rolPrincipal: string = '';
+  imagenUsuario: string = '';
+
+  private subscriptions: Subscription[] = [];
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.cargarDatosUsuario();
+
+    const sub = this.authService.usuarioActual$.subscribe(() => {
+      this.cargarDatosUsuario();
+    });
+    this.subscriptions.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  cargarDatosUsuario(): void {
+    this.nombreCompleto = this.authService.obtenerNombreUsuario();
+    this.rolPrincipal = this.authService.obtenerRolPrincipal();
+
+    const usuario = this.authService.obtenerUsuarioActual();
+    this.imagenUsuario = usuario?.imagenOriginal ||
+      'https://www.pngkey.com/png/full/12-123249_teacher-teacher-login.png';
+  }
 
   onToggleSidebar() {
     this.toggleSidebar.emit();
@@ -20,6 +52,9 @@ export class Header {
 
   toggleNotifications() {
     this.isNotificationsOpen = !this.isNotificationsOpen;
+    if (this.isNotificationsOpen) {
+      this.isLogoutOpen = false;
+    }
   }
 
   closeNotifications() {
@@ -28,9 +63,24 @@ export class Header {
 
   toggleLogout() {
     this.isLogoutOpen = !this.isLogoutOpen;
+    if (this.isLogoutOpen) {
+      this.isNotificationsOpen = false;
+    }
   }
 
   closeLogout() {
     this.isLogoutOpen = false;
   }
+
+  cerrarSesion(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('Sesión cerrada exitosamente');
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+      }
+    });
+  }
+
 }

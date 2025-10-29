@@ -97,21 +97,6 @@ export class User {
     return `${this.FILES_URL}/images/${nombreArchivo}`;
   }
 
-  // PARA IMPLEMENTAR CUANDO TENGA LOGIN (comentado por ahora)
-  /*
-  esUsuarioActual(usuario: UserResponse, usuarioLogueado: any): boolean {
-    if (usuarioLogueado && usuarioLogueado.id && usuario.id) {
-      return usuarisoLogueado.id === usuario.id;
-    }
-    
-    if (usuarioLogueado && usuarioLogueado.email && usuario.email) {
-      return usuarioLogueado.email.toLowerCase() === usuario.email.toLowerCase();
-    }
-    
-    return false;
-  }
-  */
-
   //Manejo de errores
   private handleError(error: HttpErrorResponse): Observable<never> {
     let mensajeError = 'Ha ocurrido un error inesperado';

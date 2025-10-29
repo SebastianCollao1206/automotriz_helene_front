@@ -1,0 +1,15 @@
+<div class="container p-5 mx-auto">
+    <div class="flex justify-center">
+        <h2 class="texto-grande">{{ modoEdicion ? 'Editar Proveedor' : 'Agregar Proveedor' }}</h2>
+    </div>
+
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando datos...</span>
+    </div>
+
+    <app-proveedor-form *ngIf="!cargandoDatos" [modoEdicion]="modoEdicion" [proveedorId]="proveedorId"
+        [proveedorData]="proveedorData" (alEnviarFormulario)="alCrearProveedor($event)"
+        (alActualizarFormulario)="alActualizarProveedor($event)">
+    </app-proveedor-form>
+</div>

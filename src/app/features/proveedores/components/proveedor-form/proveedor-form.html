@@ -1,0 +1,106 @@
+<div class="max-w-6xl mx-auto p-8">
+    <form [formGroup]="formularioProveedor" (ngSubmit)="enviarFormulario()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div *ngIf="!modoEdicion">
+                <label class="label-formulario">
+                    RUC <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <input type="text" formControlName="ruc"
+                        [class]="validacionFormulario.obtenerClasesCampo(formularioProveedor, 'ruc')"
+                        placeholder="Ingrese el RUC de la empresa" maxlength="11">
+                    <button type="button" (click)="buscarRuc()" [disabled]="estaBuscandoRuc"
+                        class="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-800 disabled:text-gray-400 transition-colors">
+                        <i class="fas" [class.fa-search]="!estaBuscandoRuc" [class.fa-spinner]="estaBuscandoRuc"
+                            [class.fa-spin]="estaBuscandoRuc"></i>
+                    </button>
+                </div>
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProveedor, 'ruc')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProveedor, 'ruc', 'El RUC') }}
+                </p>
+            </div>
+            <div>
+                <label class="label-formulario">
+                    Nombre de la Empresa <span class="text-red-500">*</span>
+                </label>
+                <input type="text" formControlName="nombre"
+                    [class]="modoEdicion ? validacionFormulario.obtenerClasesCampo(formularioProveedor, 'nombre') : 'texto-pequeño input-formulario bg-gray-100 cursor-not-allowed'"
+                    [placeholder]="modoEdicion ? 'Nombre de la empresa' : 'Se completará automáticamente'">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProveedor, 'nombre')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProveedor, 'nombre', 'El nombre') }}
+                </p>
+            </div>
+            <div *ngIf="modoEdicion">
+                <label class="label-formulario">
+                    Estado
+                </label>
+                <div class="relative inline-block w-full">
+                    <select formControlName="enabled"
+                        class="texto-pequeño input-formulario appearance-none cursor-pointer">
+                        <option [value]="true">Activo</option>
+                        <option [value]="false">Inactivo</option>
+                    </select>
+                    <i
+                        class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div>
+                <label class="label-formulario">
+                    Dirección <span class="text-red-500">*</span>
+                </label>
+                <input type="text" formControlName="direccion"
+                    [class]="modoEdicion ? validacionFormulario.obtenerClasesCampo(formularioProveedor, 'direccion') : 'texto-pequeño input-formulario bg-gray-100 cursor-not-allowed'"
+                    [placeholder]="modoEdicion ? 'Dirección de la empresa' : 'Se completará automáticamente'">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProveedor, 'direccion')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProveedor, 'direccion', 'La dirección') }}
+                </p>
+            </div>
+            <div>
+                <label class="label-formulario">
+                    Teléfono <span class="text-red-500">*</span>
+                </label>
+                <input type="text" formControlName="telefono"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProveedor, 'telefono')"
+                    placeholder="Ingrese el teléfono" maxlength="15">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProveedor, 'telefono')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProveedor, 'telefono', 'El teléfono') }}
+                </p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+            <div>
+                <label class="label-formulario">
+                    Correo Electrónico <span class="text-red-500">*</span>
+                </label>
+                <input type="email" formControlName="email"
+                    [class]="validacionFormulario.obtenerClasesCampo(formularioProveedor, 'email')"
+                    placeholder="empresa@ejemplo.com">
+                <p *ngIf="validacionFormulario.esCampoInvalido(formularioProveedor, 'email')"
+                    class="mt-1 text-xs text-red-500">
+                    {{ validacionFormulario.obtenerMensajeError(formularioProveedor, 'email', 'El correo') }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="flex justify-center pt-4 gap-6">
+            <button type="button" class="btn btn-gris" (click)="volverAListaProveedores()">
+                <i class="fas fa-arrow-left mx-2"></i>
+                Volver
+            </button>
+            <button type="submit" [disabled]="!esFormularioValido || enviandoFormulario"
+                [class]="!esFormularioValido || enviandoFormulario ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'">
+                <i class="fas mx-3" [class.fa-save]="!modoEdicion" [class.fa-edit]="modoEdicion"></i>
+                <span>{{ enviandoFormulario ? (modoEdicion ? 'Actualizando...' : 'Guardando...') : (modoEdicion ?
+                    'Actualizar Proveedor' : 'Guardar Proveedor') }}</span>
+            </button>
+
+        </div>
+    </form>
+</div>

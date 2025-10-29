@@ -11,6 +11,7 @@ import { User } from '../../../../core/services/user/user';
 import { Role } from '../../../../core/services/role/role';
 import { ReniecService, DatosPersona } from '../../../../core/services/api/reniec-service';
 import { FormDataLoader } from '../../../../core/services/loaders/form-data-loader';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-form',
@@ -42,7 +43,8 @@ export class UsersForm implements OnInit, OnChanges {
     public validacionFormulario: Validaciones,
     private userService: User,
     private formDataLoader: FormDataLoader,
-    private reniecService: ReniecService
+    private reniecService: ReniecService,
+    private router: Router
   ) {
     this.formularioUsuario = this.crearFormulario();
   }
@@ -63,6 +65,10 @@ export class UsersForm implements OnInit, OnChanges {
     }
 
     this.cdr.detectChanges();
+  }
+
+  volverAListaUsuarios(): void {
+    this.router.navigate(['/usuarios']);
   }
 
   private crearFormulario(): FormGroup {

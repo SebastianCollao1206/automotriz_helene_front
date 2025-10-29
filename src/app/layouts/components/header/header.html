@@ -23,8 +23,6 @@
             class="lg:hidden cursor-pointer flex items-center justify-center md:w-9 md:h-9 w-7 h-7 rounded-lg border border-zinc-200 hover:bg-zinc-200 transition-colors">
             <i class="fas fa-align-left texto-pequeño text-zinc-600"></i>
         </button>
-
-        <!-- Panel lateral de notificaciones -->
         <div *ngIf="isNotificationsOpen"
             class="absolute top-20 right-3 w-88 bg-white rounded-xl shadow-2xl  border border-zinc-200 overflow-y-auto z-50 max-h-120">
 
@@ -48,16 +46,14 @@
                 </div>
             </div>
         </div>
-
-        <!-- Overlay para cerrar -->
         <div *ngIf="isNotificationsOpen" (click)="closeNotifications()" class="fixed inset-0 z-40"></div>
 
         <div class="hidden lg:block border-l border-zinc-300 h-8"></div>
 
         <div class="hidden lg:flex items-center space-x-2 md:space-x-4">
             <div class="text-left">
-                <p class="texto-pequeño">Sebastian Collao Salas</p>
-                <p class="texto-chico text-zinc-500">Administrador</p>
+                <p class="texto-pequeño">{{nombreCompleto}}</p>
+                <p class="texto-chico text-zinc-500">{{rolPrincipal}}</p>
             </div>
 
             <img src="https://www.pngkey.com/png/full/12-123249_teacher-teacher-login.png" alt="Avatar"
@@ -69,7 +65,7 @@
         </div>
         <div *ngIf="isLogoutOpen"
             class="absolute top-20 right-3 w-45 bg-white rounded-xl shadow-2xl border border-zinc-200 z-50">
-            <button
+            <button (click)="cerrarSesion()"
                 class="w-full text-left texto-pequeño px-6 rounded-xl py-3 hover:bg-zinc-200/60 transition-colors text-red-500">
                 <i class="fa-solid fa-right-from-bracket mx-2"></i> Cerrar Sesión
             </button>

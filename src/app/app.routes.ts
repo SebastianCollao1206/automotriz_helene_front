@@ -12,8 +12,16 @@ import { ListaTipoProducto } from './features/tipo-producto/pages/lista-tipo-pro
 import { ListaUnidadesMedida } from './features/unidades-medida/pages/lista-unidades-medida/lista-unidades-medida';
 import { ListaProductos } from './features/productos/pages/lista-productos/lista-productos';
 import { GestionProductos } from './features/productos/pages/gestion-productos/gestion-productos';
+import { GestionProveedores } from './features/proveedores/pages/gestion-proveedores/gestion-proveedores';
+import { ListaProveedores } from './features/proveedores/pages/lista-proveedores/lista-proveedores';
+import { NoAuthGuard } from './core/guards/no-auth-guard';
+import { AuthGuard } from './core/guards/auth-guard';
+import { roleGuard } from './core/guards/role-guard';
+import { Bienvenida } from './shared/components/bienvenida/bienvenida';
 
 export const routes: Routes = [
+
+    //LIBRES
     {
         path: 'marcar',
         component: MarcarAsistencia,
@@ -21,62 +29,130 @@ export const routes: Routes = [
     {
         path: 'login',
         component: Login,
+        canActivate: [NoAuthGuard]
     },
     {
         path: '',
         component: MainLayout,
+        canActivate: [AuthGuard],
         children: [
+
+            //ACA HACER UNA DE BIENVENIDA
             {
-                path: 'agregar/usuario',
-                component: GestionUsuarios,
+                path: '',
+                redirectTo: 'bienvenida',
+                pathMatch: 'full'
             },
+
             {
-                path: 'usuario/editar/:id',
-                component: GestionUsuarios,
+                path: 'bienvenida',
+                component: Bienvenida
             },
+            //USUARIOS-GERENTE
+            // USUARIOS - Solo GERENTE
             {
                 path: 'usuarios',
                 component: ListaUsuarios,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarUsuarios' }
             },
+            {
+                path: 'usuarios/agregar',
+                component: GestionUsuarios,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarUsuarios' }
+            },
+            {
+                path: 'usuarios/editar/:id',
+                component: GestionUsuarios,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarUsuarios' }
+            },
+
+            // CATEGORÍAS DE PRODUCTO - Solo ADMINISTRADOR
             {
                 path: 'categorias',
                 component: ListaCategorias,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarCategorias' }
             },
             {
                 path: 'marcas',
                 component: ListaMarcas,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarCategorias' }
             },
             {
                 path: 'tipos-producto',
                 component: ListaTipoProducto,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarCategorias' }
             },
             {
                 path: 'unidades-medida',
                 component: ListaUnidadesMedida,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarCategorias' }
             },
-            {
-                path: 'agregar/producto',
-                component: GestionProductos,
-            },
-            {
-                path: 'producto/editar/:id',
-                component: GestionProductos,
-            },
+
+            // PRODUCTOS - ADMINISTRADOR y GERENTE
             {
                 path: 'productos',
                 component: ListaProductos,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarProductos' }
+            },
+            {
+                path: 'productos/agregar',
+                component: GestionProductos,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarProductos' }
+            },
+            {
+                path: 'productos/editar/:id',
+                component: GestionProductos,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarProductos' }
+            },
+
+            // PROVEEDORES - ADMINISTRADOR y GERENTE
+            {
+                path: 'proveedores',
+                component: ListaProveedores,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarProveedores' }
+            },
+            {
+                path: 'proveedores/agregar',
+                component: GestionProveedores,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarProveedores' }
+            },
+            {
+                path: 'proveedores/editar/:id',
+                component: GestionProveedores,
+                canActivate: [roleGuard],
+                data: { permission: 'gestionarProveedores' }
             },
 
 
-
+            // ASISTENCIA - Solo GERENTE
             {
-                path: 'asistencia',
+                path: 'asistencia/diaria',
                 component: AsistenciaDiaria,
+                canActivate: [roleGuard],
+                data: { permission: 'verAsistencia' }
             },
             {
                 path: 'asistencia/usuario',
                 component: AsistenciaUsuario,
+                canActivate: [roleGuard],
+                data: { permission: 'verAsistencia' }
             },
         ],
     },
+    {
+        path: '**',
+        redirectTo: 'login'
+    }
 ];

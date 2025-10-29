@@ -15,6 +15,7 @@ export class UsersTable {
 
   @Output() editarUsuario = new EventEmitter<number>();
   @Output() cambiarEstado = new EventEmitter<{ id: number; enabled: boolean }>();
+  @Input() usuarioLogueadoId: number | null = null;
 
   onEditarClick(id: number): void {
     this.editarUsuario.emit(id);
@@ -25,6 +26,10 @@ export class UsersTable {
       id: usuario.id,
       enabled: !usuario.enabled
     });
+  }
+
+  esUsuarioLogueado(id: number): boolean {
+    return this.usuarioLogueadoId === id;
   }
 
   getRoleBadgeClass(role: string): string {

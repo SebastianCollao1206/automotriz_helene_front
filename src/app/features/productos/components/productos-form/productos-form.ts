@@ -13,6 +13,7 @@ import { Producto } from '../../../../core/services/producto/producto';
 import { Categoria } from '../../../../core/services/categoria/categoria';
 import { Marca } from '../../../../core/services/marca/marca';
 import { UnidadMedida } from '../../../../core/services/unidad-medida/unidad-medida';
+import { Router } from '@angular/router';
 import { TipoProducto } from '../../../../core/services/tipo-producto/tipo-producto';
 
 @Component({
@@ -53,7 +54,8 @@ export class ProductosForm implements OnChanges, OnInit{
     private categoriaService: Categoria,
     private marcaService: Marca,
     private unidadMedidaService: UnidadMedida,
-    private tipoProductoService: TipoProducto
+    private tipoProductoService: TipoProducto,
+    private router: Router
   ) {
     this.formularioProducto = this.crearFormulario();
   }
@@ -77,6 +79,10 @@ export class ProductosForm implements OnChanges, OnInit{
     }
 
     this.cdr.detectChanges();
+  }
+
+  volverAListaProductos(): void {
+    this.router.navigate(['/productos']);
   }
 
   private crearFormulario(): FormGroup {

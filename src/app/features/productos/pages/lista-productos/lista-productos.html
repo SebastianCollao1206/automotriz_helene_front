@@ -8,12 +8,20 @@
     </div>
     <div *ngIf="!cargandoDatos">
         <div class="mx-auto p-8">
-            <div class="flex items-center gap-2 texto-mediano cursor-pointer" [class.mb-5]="filtrosVisibles"
-                (click)="alternarFiltros()">
-                <i class="fas fa-filter text-zinc-600"></i>
-                <h3 class="font-semibold text-zinc-800 mr-2">Filtros</h3>
-                <i class="fas fa-chevron-down text-zinc-500 transition-transform duration-100"
-                    [class.rotate-180]="!filtrosVisibles"></i>
+            <div class="flex justify-between flex-col sm:flex-row">
+                <div class="flex items-center gap-2 texto-mediano cursor-pointer" [class.mb-5]="filtrosVisibles"
+                    (click)="alternarFiltros()">
+                    <i class="fas fa-filter text-zinc-600"></i>
+                    <h3 class="font-semibold text-zinc-800 mr-2">Filtros</h3>
+                    <i class="fas fa-chevron-down text-zinc-500 transition-transform duration-100"
+                        [class.rotate-180]="!filtrosVisibles"></i>
+                </div>
+                <div [ngClass]="{'mb-6': filtrosVisibles, 'mt-6 sm:mt-0': !filtrosVisibles}">
+                    <button class="btn btn-azul" (click)="onAgregarProducto()">
+                        <i class="fas fa-plus mr-2"></i>
+                        Agregar Producto
+                    </button>
+                </div>
             </div>
             <div class="filtros-contenedor transition-all duration-300 ease-in-out overflow-hidden shadow-lg rounded-2xl"
                 [class.filtros-ocultos]="!filtrosVisibles">
