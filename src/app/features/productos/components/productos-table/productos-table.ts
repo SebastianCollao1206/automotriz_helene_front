@@ -31,13 +31,13 @@ export class ProductosTable {
 
   getStockBadgeClass(stock: number): string {
     if (stock > 15) {
-      return 'badge-verde'; 
+      return 'badge-verde';
     } else if (stock > 6) {
-      return 'badge-azul'; 
+      return 'badge-azul';
     } else if (stock > 3) {
-      return 'badge-amarillo'; 
+      return 'badge-amarillo';
     } else {
-      return 'badge-rojo'; 
+      return 'badge-rojo';
     }
   }
 

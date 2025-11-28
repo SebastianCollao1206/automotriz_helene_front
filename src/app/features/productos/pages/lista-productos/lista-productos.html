@@ -111,23 +111,33 @@
                         de <span class="font-semibold">{{ productosFiltrados.length }}</span> producto{{
                         productosFiltrados.length !== 1 ? 's' : '' }}
                     </div>
-                    <div class="flex space-x-1 sm:space-x-2 lg:space-x-3 texto-pequeño">
+                    <div class="flex items-center space-x-1 sm:space-x-2 texto-pequeño">
                         <button
-                            class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                            [disabled]="paginaActual === 1" (click)="paginaAnterior()">
+                            class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === 1" (click)="paginaAnterior()" aria-label="Página anterior">
                             <i class="fas fa-chevron-left"></i>
                         </button>
-                        <button *ngFor="let pagina of paginasArray"
-                            [class]="paginaActual === pagina 
-                    ? 'px-3 py-1 bg-zinc-500 hover:bg-zinc-600 text-white rounded transition-colors duration-200 cursor-pointer'
-                    : 'px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer'"
-                            (click)="cambiarPagina(pagina)">
-                            {{ pagina }}
-                        </button>
+
+                        <ng-container *ngFor="let pagina of paginasArray">
+                            <button *ngIf="pagina !== '...'"
+                                [class]="paginaActual === pagina 
+        ? 'px-2 sm:px-3 py-1 bg-zinc-500 hover:bg-zinc-600 text-white rounded transition-colors duration-200 cursor-pointer font-semibold'
+        : 'px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer'"
+                                (click)="onClickPagina(pagina)" [attr.aria-label]="'Ir a página ' + pagina"
+                                [attr.aria-current]="paginaActual === pagina ? 'page' : null">
+                                {{ pagina }}
+                            </button>
+
+                            <span *ngIf="pagina === '...'" class="px-1 sm:px-2 text-zinc-500 select-none"
+                                aria-hidden="true">
+                                ...
+                            </span>
+                        </ng-container>
+
                         <button
-                            class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                            [disabled]="paginaActual === totalPaginas || totalPaginas === 0"
-                            (click)="paginaSiguiente()">
+                            class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === totalPaginas || totalPaginas === 0" (click)="paginaSiguiente()"
+                            aria-label="Página siguiente">
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>

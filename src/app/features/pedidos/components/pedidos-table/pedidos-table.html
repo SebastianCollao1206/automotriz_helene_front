@@ -1,0 +1,72 @@
+<div class="overflow-x-auto">
+    <table class="w-full">
+        <thead class="border-b border-zinc-200">
+            <tr class="bg-zinc-100 text-center">
+                <th class="texto-pequeño th-tabla">Estado</th>
+                <th class="texto-pequeño th-tabla">Fecha Pedido</th>
+                <th class="texto-pequeño th-tabla">Fecha Entrega</th>
+                <th class="texto-pequeño th-tabla">Proveedor</th>
+                <th class="texto-pequeño th-tabla">Total</th>
+                <th class="texto-pequeño th-tabla">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-200">
+            <tr *ngFor="let pedido of pedidos; trackBy: trackByPedidoId"
+                class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                <td class="py-3 px-3">
+                    <span [class]="getEstadoBadge(pedido.estado) + ' texto-chico'">
+                        {{ getEstadoLabel(pedido.estado) }}
+                    </span>
+                </td>
+                <td class="texto-pequeño td1-tabla">
+                    {{ formatearFecha(pedido.fechaPedido) }}
+                </td>
+                <td class="texto-pequeño td1-tabla">
+                    {{ formatearFecha(pedido.fechaEntregaEsperada) }}
+                </td>
+                <td class="texto-pequeño td1-tabla">
+                    {{ pedido.proveedor }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño font-semibold">
+                    S/ {{ pedido.total | number:'1.2-2' }}
+                </td>
+                <td class="py-3 px-3">
+                    <div class="flex justify-center items-center gap-2">
+                        <button class="btn-ver" (click)="onVerDetalleClick(pedido.id)"
+                            [attr.aria-label]="'Ver detalle del pedido ' + pedido.id">
+                            <i class="fas fa-eye texto-mediano"></i>
+                        </button>
+
+                        <button
+                            *ngIf="puedeGestionar && pedido.estado !== 'CANCELADO' && pedido.estado !== 'ENTREGA_COMPLETA'"
+                            class="btn-editar" (click)="onEditarClick(pedido.id)"
+                            [attr.aria-label]="'Editar pedido ' + pedido.id">
+                            <i class="fas fa-edit texto-mediano"></i>
+                        </button>
+                        <!-- <button
+                            *ngIf="puedeGestionar && pedido.estado !== 'CANCELADO' && pedido.estado !== 'ENTREGA_COMPLETA'"
+                            class="btn-eliminar" (click)="onCancelarClick(pedido.id)"
+                            [attr.aria-label]="'Cancelar pedido ' + pedido.id">
+                            <i class="fas fa-ban texto-mediano"></i>
+                        </button> -->
+                        <button *ngIf="puedeGestionar && pedido.estado === 'PENDIENTE'" class="btn-eliminar"
+                            (click)="onCancelarClick(pedido.id)" [attr.aria-label]="'Cancelar pedido ' + pedido.id">
+                            <i class="fas fa-ban texto-mediano"></i>
+                        </button>
+                        <button
+                            *ngIf="puedeRecibir && (pedido.estado === 'PENDIENTE' || pedido.estado === 'ENTREGA_INCOMPLETA')"
+                            class="btn-editar" (click)="onRecibirClick(pedido.id)"
+                            [attr.aria-label]="'Recibir productos del pedido ' + pedido.id">
+                            <i class="fas fa-truck texto-mediano"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="pedidos.length === 0" class="bg-zinc-50 px-6 py-12 text-center text-zinc-500 texto-pequeño">
+    <i class="fas fa-inbox text-4xl mb-3 text-zinc-400"></i>
+    <p>No se encontraron pedidos</p>
+</div>

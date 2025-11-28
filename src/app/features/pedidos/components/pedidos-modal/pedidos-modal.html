@@ -1,0 +1,120 @@
+<div *ngIf="mostrar" class="fixed inset-0 bg-zinc-700/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    (click)="cerrar()">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-4 rounded-t-2xl sticky top-0 z-10">
+            <div class="flex justify-between items-center">
+                <h3 class="texto-mediano font-semibold text-white">
+                    <i class="fas fa-file-invoice mr-2"></i>
+                    Detalle del Pedido
+                </h3>
+                <button type="button" (click)="cerrar()" class="text-white hover:text-gray-200 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="pedido" class="p-6 space-y-6">
+            <div
+                class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-zinc-200 shadow-lg">
+                <div>
+                    <p class="texto-chico text-zinc-600">Estado</p>
+                    <span [class]="getEstadoBadge(pedido.estado) + ' texto-chico mt-1 inline-block'">
+                        {{ getEstadoLabel(pedido.estado) }}
+                    </span>
+                </div>
+                <div>
+                    <p class="texto-chico text-zinc-600">Proveedor</p>
+                    <p class="texto-pequeño font-medium text-zinc-800">{{ pedido.proveedor }}</p>
+                </div>
+                <div>
+                    <p class="texto-chico text-zinc-600">Fecha Pedido</p>
+                    <p class="texto-pequeño font-medium text-zinc-800">{{ formatearFecha(pedido.fechaPedido) }}</p>
+                </div>
+                <div>
+                    <p class="texto-chico text-zinc-600">Fecha Entrega Esperada</p>
+                    <p class="texto-pequeño font-medium text-zinc-800">{{ formatearFecha(pedido.fechaEntregaEsperada) }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-lg">
+
+                <!-- <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-zinc-200">
+                            <tr class="bg-zinc-100 text-center">
+                                <th class="texto-pequeño th-tabla">Producto</th>
+                                <th class="texto-pequeño th-tabla">Cantidad</th>
+                                <th class="texto-pequeño th-tabla">Precio Unitario</th>
+                                <th class="texto-pequeño th-tabla">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200">
+                            <tr *ngFor="let detalle of pedido.detalles"
+                                class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                                <td class="py-3 px-4 texto-pequeño">
+                                    <span class="font-medium">{{ detalle.producto }}</span>
+                                </td>
+                                <td class="py-3 px-4 texto-pequeño">
+                                    {{ detalle.cantidad }}
+                                </td>
+                                <td class="py-3 px-4 texto-pequeño">
+                                    S/ {{ detalle.precioCompraUnitario | number:'1.2-2' }}
+                                </td>
+                                <td class="py-3 px-4 texto-pequeño font-semibold">
+                                    S/ {{ detalle.subtotal | number:'1.2-2' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-zinc-200">
+                            <tr class="bg-zinc-100 text-center">
+                                <th class="texto-pequeño th-tabla">Producto</th>
+                                <th class="texto-pequeño th-tabla">Cantidad Pedida</th>
+                                <th class="texto-pequeño th-tabla">Precio Unitario</th>
+                                <th class="texto-pequeño th-tabla">Subtotal</th>
+                                <th *ngIf="mostrarCantidadRecibida()" class="texto-pequeño th-tabla">Cantidad Recibida
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200">
+                            <tr *ngFor="let detalle of pedido.detalles"
+                                class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                                <td class="py-3 px-4 texto-pequeño">
+                                    <span class="font-medium">{{ detalle.producto }}</span>
+                                </td>
+                                <td class="py-3 px-4 texto-pequeño">
+                                    {{ detalle.cantidad }}
+                                </td>
+                                <td class="py-3 px-4 texto-pequeño">
+                                    S/ {{ detalle.precioCompraUnitario | number:'1.2-2' }}
+                                </td>
+                                <td class="py-3 px-4 texto-pequeño font-semibold">
+                                    S/ {{ detalle.subtotal | number:'1.2-2' }}
+                                </td>
+                                <td *ngIf="mostrarCantidadRecibida()" class="py-3 px-4 texto-pequeño">
+                                    <span class="font-semibold text-blue-600">
+                                        {{ detalle.cantidadRecibida || 0 }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-zinc-100 px-6 py-4 border-t border-zinc-200">
+                    <div class="flex justify-end items-center mr-6">
+                        <p class="texto-pequeño text-zinc-600 mr-4">Total:</p>
+                        <p class="texto-mediano font-bold text-zinc-800">
+                            S/ {{ pedido.total | number:'1.2-2' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

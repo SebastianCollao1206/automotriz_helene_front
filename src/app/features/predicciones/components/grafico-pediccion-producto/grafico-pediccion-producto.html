@@ -1,0 +1,55 @@
+<div *ngIf="visible" class="fixed inset-0 bg-zinc-700/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+    (click)="onBackdropClick($event)">
+
+    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden"
+        (click)="$event.stopPropagation()">
+
+        <div class="bg-gradient-to-r from-zinc-800 to-zinc-600 px-8 py-5 flex justify-between items-center">
+            <div>
+                <h2 class="texto-intermedio font-bold text-white">
+                    <i class="fas fa-chart-line mr-2"></i>
+                    Análisis de Predicción
+                </h2>
+                <p class="texto-pequeño text-zinc-200 mt-2">
+                    {{ nombreProducto }}
+                </p>
+            </div>
+            <button (click)="cerrarModal()"
+                class="w-10 h-10 text-white flex items-center justify-center rounded-lg hover:bg-zinc-500 transition-colors cursor-pointer">
+                <i class="fas fa-times texto-normal"></i>
+            </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh)]">
+
+            <div *ngIf="cargandoDatos" class="flex flex-col justify-center items-center py-16">
+                <i class="fas fa-spinner fa-spin text-5xl text-blue-500 mb-4"></i>
+                <span class="texto-mediano text-zinc-600">Cargando datos del gráfico...</span>
+            </div>
+
+            <div *ngIf="!cargandoDatos && datosGrafico" class="space-y-6">
+
+                <div class="bg-white rounded-xl border border-zinc-200 shadow-md p-6">
+                    <div class="mb-7">
+                        <h3 class="texto-mediano font-semibold text-zinc-800 mb-1">
+                            Tendencia de Consumo
+                        </h3>
+                        <p class="texto-chico text-zinc-500">
+                            Análisis histórico y proyección futura del inventario
+                        </p>
+                    </div>
+
+                    <div class="w-full" style="height: 390px;">
+                        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!cargandoDatos && !datosGrafico" class="flex flex-col justify-center items-center py-16">
+                <i class="fas fa-exclamation-circle texto-titulo text-red-500 mb-4"></i>
+                <span class="texto-mediano text-zinc-600">No se pudieron cargar los datos</span>
+            </div>
+        </div>
+    </div>
+</div>

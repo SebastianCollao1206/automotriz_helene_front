@@ -154,6 +154,28 @@ export class Sidebar implements OnInit, OnDestroy {
       );
     }
 
+    // Pedidos - GERENTE, ADMIN o SELLER
+    if (this.authService.puedeVerPedidos()) {
+      items.push({
+        label: 'Pedidos',
+        icon: 'fas fa-shopping-cart',
+        route: '/pedidos',
+        baseRoute: 'pedidos',
+        visible: true
+      });
+    }
+
+    // Predicciones - GERENTE o ADMIN
+    if (this.authService.puedeVerPredicciones()) {
+      items.push({
+        label: 'Predicciones',
+        icon: 'fas fa-chart-line',
+        route: '/predicciones',
+        baseRoute: 'predicciones',
+        visible: true
+      });
+    }
+
     this.menuItems = items;
   }
 

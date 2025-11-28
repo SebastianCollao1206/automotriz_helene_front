@@ -1,0 +1,176 @@
+<div class="max-w-7xl mx-auto p-8">
+    <div class="bg-white rounded-2xl border border-zinc-200 shadow-lg p-6 mb-8">
+        <form [formGroup]="formularioPedido">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label class="label-formulario">
+                        Fecha Entrega Esperada <span class="text-red-500">*</span>
+                    </label>
+                    <input type="datetime-local" formControlName="fechaEntregaEsperada"
+                        [class]="validacionFormulario.obtenerClasesCampo(formularioPedido, 'fechaEntregaEsperada')">
+                    <p *ngIf="validacionFormulario.esCampoInvalido(formularioPedido, 'fechaEntregaEsperada')"
+                        class="mt-1 text-xs text-red-500">
+                        {{ validacionFormulario.obtenerMensajeError(formularioPedido, 'fechaEntregaEsperada', 'La fecha
+                        de entrega') }}
+                    </p>
+                </div>
+
+                <div>
+                    <label class="label-formulario">Proveedor <span class="text-red-500">*</span></label>
+                    <div *ngIf="cargandoProveedores" class="flex justify-center items-center p-4">
+                        <i class="fas fa-spinner fa-spin text-xl text-blue-500"></i>
+                        <span class="ml-3 text-zinc-600 texto-pequeño">Cargando proveedores...</span>
+                    </div>
+                    <div *ngIf="!cargandoProveedores" class="relative inline-block w-full">
+                        <select formControlName="proveedorId"
+                            [class]="validacionFormulario.esCampoInvalido(formularioPedido, 'proveedorId') ? 'texto-pequeño input-formulario appearance-none cursor-pointer border-red-500' : 'texto-pequeño input-formulario appearance-none cursor-pointer'">
+                            <option value="" disabled selected>Seleccione un proveedor</option>
+                            <option *ngFor="let proveedor of proveedoresDisponibles" [value]="proveedor.id">
+                                {{ proveedor.nombre }}
+                            </option>
+                        </select>
+                        <i
+                            class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2 pointer-events-none"></i>
+                    </div>
+                    <p *ngIf="validacionFormulario.esCampoInvalido(formularioPedido, 'proveedorId')"
+                        class="mt-1 text-xs text-red-500">Debe seleccionar un proveedor</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-6 border border-zinc-200">
+                <h4 class="texto-pequeño font-semibold text-zinc-800 mb-4">
+                    <i class="fas fa-box mr-2 text-green-500"></i>
+                    Agregar Productos al Pedido
+                </h4>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                    <div class="md:col-span-5 relative">
+                        <label class="label-formulario">
+                            Producto <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" [(ngModel)]="busquedaProducto" [ngModelOptions]="{standalone: true}"
+                            (input)="onBuscarProducto()" (focus)="mostrarSugerencias = true"
+                            class="texto-pequeño input-formulario" placeholder="Buscar producto...">
+
+                        <div *ngIf="mostrarSugerencias && productosFiltrados.length > 0"
+                            class="absolute z-50 w-full mt-1 bg-white border border-zinc-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                            <div *ngFor="let producto of productosFiltrados" (click)="seleccionarProducto(producto)"
+                                class="px-4 py-3 hover:bg-blue-50 cursor-pointer transition-colors duration-150 border-b border-zinc-100 last:border-b-0">
+                                <p class="texto-pequeño font-medium text-zinc-800">{{ formatearNombreProducto(producto)
+                                    }}</p>
+                                <p class="texto-chico text-zinc-500 mt-1">Stock: {{ producto.stock }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <label class="label-formulario">
+                            Cantidad <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" [(ngModel)]="cantidadDetalle" [ngModelOptions]="{standalone: true}"
+                            class="texto-pequeño input-formulario" placeholder="0" min="1">
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <label class="label-formulario">
+                            Precio Unitario <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" [(ngModel)]="precioUnitarioDetalle" [ngModelOptions]="{standalone: true}"
+                            class="texto-pequeño input-formulario" placeholder="0.00" min="0" step="0.01">
+                    </div>
+
+                    <div class="md:col-span-1">
+                        <button type="button" (click)="agregarDetalle()"
+                            class="w-full btn btn-azul h-[42px] flex items-center justify-center">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-zinc-200 shadow-lg overflow-hidden mb-8">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="border-b border-zinc-200">
+                    <tr class="bg-zinc-100 text-center">
+                        <th class="texto-pequeño th-tabla">Producto</th>
+                        <th class="texto-pequeño th-tabla">Cantidad</th>
+                        <th class="texto-pequeño th-tabla">Precio Unitario</th>
+                        <th class="texto-pequeño th-tabla">Subtotal</th>
+                        <th class="texto-pequeño th-tabla">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-200">
+                    <tr *ngFor="let detalle of detallesPedido; let i = index"
+                        class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                        <td class="py-3 px-4 texto-pequeño text-center">
+                            <span class="font-medium">{{ detalle.nombreProducto }}</span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <input *ngIf="detalleEditando === i" type="number" [(ngModel)]="detalle.cantidad"
+                                (ngModelChange)="calcularSubtotal(detalle)"
+                                class="texto-pequeño input-formulario w-24 text-center" min="1">
+                            <span *ngIf="detalleEditando !== i" class="texto-pequeño">{{ detalle.cantidad }}</span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <input *ngIf="detalleEditando === i" type="number"
+                                [(ngModel)]="detalle.precioCompraUnitario" (ngModelChange)="calcularSubtotal(detalle)"
+                                class="texto-pequeño input-formulario w-28 text-center" min="0" step="0.01">
+                            <span *ngIf="detalleEditando !== i" class="texto-pequeño">S/ {{ detalle.precioCompraUnitario
+                                | number:'1.2-2' }}</span>
+                        </td>
+                        <td class="py-3 px-4 texto-pequeño font-semibold">
+                            S/ {{ detalle.subtotal | number:'1.2-2' }}
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="flex justify-center items-center gap-2">
+                                <button *ngIf="detalleEditando !== i" type="button" class="btn-editar"
+                                    (click)="editarDetalle(i)">
+                                    <i class="fas fa-edit texto-mediano"></i>
+                                </button>
+                                <button *ngIf="detalleEditando === i" type="button" class="btn-ver"
+                                    (click)="guardarEdicion()">
+                                    <i class="fas fa-check texto-mediano"></i>
+                                </button>
+                                <button type="button" class="btn-eliminar" (click)="eliminarDetalle(i)">
+                                    <i class="fas fa-trash texto-mediano"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="detallesPedido.length === 0" class="bg-zinc-50 px-6 py-12 text-center text-zinc-500 texto-pequeño">
+            <i class="fas fa-inbox text-4xl mb-3 text-zinc-400"></i>
+            <p>No hay productos agregados al pedido</p>
+            <p class="text-xs mt-2">Utiliza el formulario superior para agregar productos</p>
+        </div>
+
+        <div *ngIf="detallesPedido.length > 0" class="bg-zinc-100 px-6 py-4 border-t border-zinc-200">
+            <div class="flex justify-end mr-5 items-center">
+                <p class="texto-pequeño text-zinc-600 mr-4">Total:</p>
+                <p class="texto-mediano font-bold text-zinc-800">
+                    S/ {{ calcularTotal() | number:'1.2-2' }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center gap-6">
+        <button type="button" class="btn btn-gris" (click)="volverAListaPedidos()">
+            <i class="fas fa-arrow-left mx-2"></i>
+            Volver
+        </button>
+        <button type="button" [disabled]="formularioPedido.invalid || detallesPedido.length === 0 || enviandoFormulario"
+            [class]="formularioPedido.invalid || detallesPedido.length === 0 || enviandoFormulario ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'"
+            (click)="enviarFormulario()">
+            <i class="fas mx-3" [class.fa-save]="!modoEdicion" [class.fa-edit]="modoEdicion"></i>
+            <span>{{ enviandoFormulario ? (modoEdicion ? 'Actualizando...' : 'Guardando...') : (modoEdicion ?
+                'Actualizar Pedido' : 'Crear Pedido') }}</span>
+        </button>
+    </div>
+</div>

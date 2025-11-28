@@ -46,8 +46,66 @@ export class ListaProductos implements OnInit {
     return this.productosFiltrados.slice(inicio, fin);
   }
 
-  get paginasArray(): number[] {
-    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  get paginasArray(): (number | string)[] {
+    const maxPaginasVisibles = 4;
+    const paginas: (number | string)[] = [];
+
+    if (this.totalPaginas <= maxPaginasVisibles + 2) {
+      return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+    }
+
+    paginas.push(1);
+
+    let inicio: number;
+    let fin: number;
+
+    if (this.paginaActual <= Math.ceil(maxPaginasVisibles / 2) + 1) {
+      inicio = 2;
+      fin = maxPaginasVisibles;
+
+      for (let i = inicio; i <= fin; i++) {
+        paginas.push(i);
+      }
+
+      if (fin < this.totalPaginas - 1) {
+        paginas.push('...');
+      }
+    } else if (this.paginaActual >= this.totalPaginas - Math.floor(maxPaginasVisibles / 2)) {
+      if (this.totalPaginas - maxPaginasVisibles > 1) {
+        paginas.push('...');
+      }
+
+      inicio = this.totalPaginas - maxPaginasVisibles + 1;
+      fin = this.totalPaginas - 1;
+
+      for (let i = inicio; i <= fin; i++) {
+        paginas.push(i);
+      }
+    } else {
+      paginas.push('...');
+
+      const mitad = Math.floor(maxPaginasVisibles / 2);
+      inicio = this.paginaActual - mitad + 1;
+      fin = this.paginaActual + mitad - 1;
+
+      for (let i = inicio; i <= fin; i++) {
+        paginas.push(i);
+      }
+
+      paginas.push('...');
+    }
+
+    if (this.totalPaginas > 1) {
+      paginas.push(this.totalPaginas);
+    }
+
+    return paginas;
+  }
+
+  onClickPagina(pagina: number | string): void {
+    if (typeof pagina === 'number') {
+      this.cambiarPagina(pagina);
+    }
   }
 
   constructor(

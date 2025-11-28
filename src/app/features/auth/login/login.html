@@ -20,7 +20,7 @@
                 <form [formGroup]="formularioLogin" (ngSubmit)="onSubmit()" class="gap-7 flex flex-col">
                     <div>
                         <label class="label-formulario texto-pequeño">
-                            Correo electrónico <span class="text-red-500">*</span>
+                            Correo electrónico 
                         </label>
                         <div class="relative">
                             <input type="email" formControlName="email"
@@ -36,7 +36,7 @@
 
                     <div>
                         <label class="label-formulario texto-pequeño">
-                            Contraseña <span class="text-red-500">*</span>
+                            Contraseña 
                         </label>
                         <div class="relative">
                             <input [type]="verPassword ? 'text' : 'password'" formControlName="password"

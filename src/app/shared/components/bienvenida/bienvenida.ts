@@ -37,7 +37,6 @@ export class Bienvenida implements OnInit, OnDestroy {
     this.configurarAccesosRapidos();
     this.actualizarFechaHora();
 
-    // Actualizar hora cada minuto
     this.intervaloHora = setInterval(() => {
       this.actualizarFechaHora();
     }, 60000);
@@ -116,6 +115,15 @@ export class Bienvenida implements OnInit, OnDestroy {
         descripcion: 'Ver registros de asistencia',
         icon: 'fas fa-calendar-check',
         route: '/asistencia/diaria'
+      });
+    }
+
+    if (this.authService.puedeVerPedidos()) {
+      accesos.push({
+        titulo: 'Pedidos',
+        descripcion: 'Administrar pedidos de compra',
+        icon: 'fas fa-shopping-cart',
+        route: '/pedidos'
       });
     }
 

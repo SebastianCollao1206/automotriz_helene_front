@@ -1,0 +1,57 @@
+<div class="overflow-x-auto">
+    <table class="w-full">
+        <thead class="border-b border-zinc-200">
+            <tr class="bg-zinc-100 text-center">
+                <th class="texto-pequeño th-tabla">Producto</th>
+                <th class="texto-pequeño th-tabla">Categoría</th>
+                <th class="texto-pequeño th-tabla">Stock Actual</th>
+                <th class="texto-pequeño th-tabla">Stock Predicho</th>
+                <th class="texto-pequeño th-tabla">Stock Recomendado</th>
+                <th class="texto-pequeño th-tabla">Cantidad a Comprar</th>
+                <th class="texto-pequeño th-tabla">Acción</th>
+                <th class="texto-pequeño th-tabla">Ver</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-200">
+            <tr *ngFor="let producto of productos; trackBy: trackByProductoId"
+                class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                <td class="texto-pequeño td1-tabla font-semibold">
+                    {{ producto.nombreProducto }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    {{ producto.categoria }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño font-medium">
+                    {{ producto.stockActual }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño">
+                    {{ producto.stockPredicho }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño font-medium text-blue-600">
+                    {{ producto.stockRecomendado }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño font-bold" [class.text-red-600]="producto.cantidadAComprar > 0"
+                    [class.text-green-600]="producto.cantidadAComprar === 0">
+                    {{ producto.cantidadAComprar }}
+                </td>
+                <td class="py-3 px-3 texto-chico">
+                    <span [class]="obtenerClaseBadge(producto.accion)">
+                        {{ obtenerLabelAccion(producto.accion) }}
+                    </span>
+                </td>
+                <td class="py-3 px-3">
+                    <button (click)="abrirGrafico(producto)"
+                        class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                        [attr.aria-label]="'Ver detalles de ' + producto.nombreProducto">
+                        <i class="fas fa-chart-line texto-mediano"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="productos.length === 0" class="bg-zinc-50 px-6 py-12 text-center text-zinc-500 texto-pequeño">
+    <i class="fas fa-inbox text-4xl mb-3 text-zinc-400"></i>
+    <p>No se encontraron productos que coincidan con los filtros</p>
+</div>

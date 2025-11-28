@@ -153,13 +153,11 @@ export class AuthService {
     return tieneToken && usuario !== null && this.puedeAccederSistema(usuario);
   }
 
-  // Verifica que el usuario NO sea empleado
   private puedeAccederSistema(usuario: AuthResponse): boolean {
     if (!usuario || !usuario.roles) return false;
 
     const roles = Array.isArray(usuario.roles) ? usuario.roles : [usuario.roles];
 
-    // Si tiene rol de empleado, no puede acceder
     const esEmpleado = roles.some(rol =>
       rol === 'ROLE_EMPLOYEE' || rol === 'EMPLOYEE' || rol === 'Empleado'
     );
@@ -228,10 +226,29 @@ export class AuthService {
     return this.esGerente();
   }
 
-  // puedeVerVentas(): boolean {
-  //   return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN', 'ROLE_SELLER']);
-  // }
+  //PEDIDOS
+  puedeGestionarPedidos(): boolean {
+    return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN']);
+  }
 
+  puedeVerPedidos(): boolean {
+    return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN', 'ROLE_SELLER']);
+  }
+
+  puedeRecibirPedidos(): boolean {
+    return this.esVendedor();
+  }
+
+  puedeModificarDetallesPedido(): boolean {
+    return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN']);
+  }
+
+  //PARA PREDICCIONES
+  puedeVerPredicciones(): boolean {
+    return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN']);
+  }
+
+  //RECARGAR ESTADO
   refrescarEstadoAutenticacion(): void {
     this.verificarEstadoAutenticacion();
   }

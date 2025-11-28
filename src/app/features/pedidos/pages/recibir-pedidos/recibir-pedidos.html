@@ -1,0 +1,111 @@
+<div class="container p-5 mx-auto">
+    <div class="flex justify-center">
+        <h2 class="texto-grande">Recibir Pedido #{{ pedidoId }}</h2>
+    </div>
+
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando datos...</span>
+    </div>
+
+    <div *ngIf="!cargandoDatos && pedidoData">
+        <div class="max-w-7xl mx-auto p-8">
+            <div class="bg-white rounded-2xl border border-zinc-200 shadow-lg p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="label-formulario">Proveedor</label>
+                        <input type="text" [value]="pedidoData.proveedor" class="texto-pequeño input-formulario"
+                            disabled>
+                    </div>
+                    <div>
+                        <label class="label-formulario">Fecha Entrega Esperada</label>
+                        <input type="text" [value]="formatearFecha(pedidoData.fechaEntregaEsperada)"
+                            class="texto-pequeño input-formulario" disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-zinc-200 shadow-lg overflow-hidden mb-8">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-zinc-200">
+                            <tr class="bg-zinc-100 text-center">
+                                <th class="texto-pequeño th-tabla">Producto</th>
+                                <th class="texto-pequeño th-tabla">Cantidad Pedida</th>
+                                <th class="texto-pequeño th-tabla">Estado</th>
+                                <th class="texto-pequeño th-tabla">Recepción</th>
+                                <th class="texto-pequeño th-tabla">Cantidad Recibida</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200">
+                            <tr *ngFor="let detalle of detallesRecepcion; let i = index"
+                                class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                                <td class="py-3 px-4 texto-pequeño text-center">
+                                    <span class="font-medium">{{ detalle.nombreProducto }}</span>
+                                </td>
+                                <td class="py-3 px-4 texto-pequeño font-semibold">
+                                    {{ detalle.cantidadPedida }}
+                                </td>
+                                <td class="py-3 px-3">
+                                    <span [class]="getEstadoBadge(detalle.estadoActual) + ' texto-chico'">
+                                        {{ getEstadoLabel(detalle.estadoActual) }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="flex justify-center gap-2">
+                                        <button type="button" [disabled]="detalle.estadoActual === 'ENTREGA_COMPLETA'"
+                                            [class]="detalle.recepcionCompleta ? 'btn-ver cursor-pointer' : 'btn btn-gris cursor-pointer'"
+                                            (click)="marcarRecepcionCompleta(i)"
+                                            [class.opacity-50]="detalle.estadoActual === 'ENTREGA_COMPLETA'"
+                                            [class.cursor-not-allowed]="detalle.estadoActual === 'ENTREGA_COMPLETA'">
+                                            <i class="fas fa-check texto-mediano"></i>
+                                            <span class="ml-2">Completo</span>
+                                        </button>
+                                        <button type="button" [disabled]="detalle.estadoActual === 'ENTREGA_COMPLETA'"
+                                            [class]="!detalle.recepcionCompleta ? 'btn-editar cursor-pointer' : 'btn btn-gris cursor-pointer'"
+                                            (click)="marcarRecepcionParcial(i)"
+                                            [class.opacity-50]="detalle.estadoActual === 'ENTREGA_COMPLETA'"
+                                            [class.cursor-not-allowed]="detalle.estadoActual === 'ENTREGA_COMPLETA'">
+                                            <i class="fas fa-minus-circle texto-mediano"></i>
+                                            <span class="ml-2">Parcial</span>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <input *ngIf="!detalle.recepcionCompleta" type="number"
+                                        [(ngModel)]="detalle.cantidadRecibida"
+                                        [disabled]="detalle.estadoActual === 'ENTREGA_COMPLETA'"
+                                        class="texto-pequeño input-formulario w-24 text-center" min="0"
+                                        [max]="detalle.cantidadRestante">
+                                    <span *ngIf="detalle.recepcionCompleta"
+                                        class="texto-pequeño font-semibold text-green-600">
+                                        {{ detalle.cantidadPedida }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div *ngIf="detallesRecepcion.length === 0"
+                    class="bg-zinc-50 px-6 py-12 text-center text-zinc-500 texto-pequeño">
+                    <i class="fas fa-inbox text-4xl mb-3 text-zinc-400"></i>
+                    <p>No hay detalles para este pedido</p>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-6">
+                <button type="button" class="btn btn-gris" (click)="volverAListaPedidos()">
+                    <i class="fas fa-arrow-left mx-2"></i>
+                    Volver
+                </button>
+                <button type="button" [disabled]="enviandoRecepcion || !hayDetallesParaRecibir()"
+                    [class]="enviandoRecepcion || !hayDetallesParaRecibir() ? 'btn btn-azul opacity-50 cursor-not-allowed' : 'btn btn-azul'"
+                    (click)="enviarRecepcion()">
+                    <i class="fas fa-truck mx-3"></i>
+                    <span>{{ enviandoRecepcion ? 'Procesando...' : 'Confirmar Recepción' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

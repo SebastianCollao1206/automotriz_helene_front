@@ -18,6 +18,11 @@ import { NoAuthGuard } from './core/guards/no-auth-guard';
 import { AuthGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 import { Bienvenida } from './shared/components/bienvenida/bienvenida';
+import { ListaPredicciones } from './features/predicciones/pages/lista-predicciones/lista-predicciones';
+import { DetallePrediccion } from './features/predicciones/pages/detalle-prediccion/detalle-prediccion';
+import { ListaPedidos } from './features/pedidos/pages/lista-pedidos/lista-pedidos';
+import { GestionPedidos } from './features/pedidos/pages/gestion-pedidos/gestion-pedidos';
+import { RecibirPedidos } from './features/pedidos/pages/recibir-pedidos/recibir-pedidos';
 
 export const routes: Routes = [
 
@@ -36,8 +41,6 @@ export const routes: Routes = [
         component: MainLayout,
         canActivate: [AuthGuard],
         children: [
-
-            //ACA HACER UNA DE BIENVENIDA
             {
                 path: '',
                 redirectTo: 'bienvenida',
@@ -48,7 +51,6 @@ export const routes: Routes = [
                 path: 'bienvenida',
                 component: Bienvenida
             },
-            //USUARIOS-GERENTE
             // USUARIOS - Solo GERENTE
             {
                 path: 'usuarios',
@@ -135,6 +137,45 @@ export const routes: Routes = [
                 data: { permission: 'gestionarProveedores' }
             },
 
+            //PREDICCIONES - GERENTE y ADMINISTRADOR
+            {
+                path: 'predicciones',
+                component: ListaPredicciones,
+                canActivate: [roleGuard],
+                data: { permission: 'verPredicciones' }
+            },
+            {
+                path: 'predicciones/detalle/:id',
+                component: DetallePrediccion,
+                canActivate: [roleGuard],
+                data: { permission: 'verPredicciones' }
+            },
+
+            //PEDIDOS
+            {
+                path: 'pedidos',
+                component: ListaPedidos,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeVerPedidos' }
+            },
+            {
+                path: 'pedidos/agregar',
+                component: GestionPedidos,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeGestionarPedidos' }
+            },
+            {
+                path: 'pedidos/editar/:id',
+                component: GestionPedidos,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeGestionarPedidos' }
+            },
+            {
+                path: 'pedidos/recibir/:id',
+                component: RecibirPedidos,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeRecibirPedidos' }
+            },
 
             // ASISTENCIA - Solo GERENTE
             {

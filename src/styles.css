@@ -74,6 +74,9 @@
   .badge-verde{
     @apply inline-block px-3 py-1 rounded-full font-medium bg-green-100 text-green-700;
   }
+  .badge-gris{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-gray-100 text-gray-700;
+  }
   
   /* BOTONES*/
   .btn {
@@ -88,8 +91,16 @@
   .btn-gris {
     @apply bg-gradient-to-r from-zinc-500 to-zinc-700;
   }
+  
+  /*BTNS PARA FORMULARIOS*/
   .btn-editar {
     @apply text-blue-600 hover:text-blue-800 transition-colors p-2 hover:bg-blue-100 rounded-lg cursor-pointer
+  }
+  .btn-eliminar {
+    @apply text-red-600 hover:text-red-800 transition-colors p-2 hover:bg-red-100 rounded-lg cursor-pointer
+  }
+  .btn-ver {
+    @apply text-green-600 hover:text-green-800 transition-colors p-2 hover:bg-green-100 rounded-lg cursor-pointer
   }
 
   /*SIDEBAR*/
