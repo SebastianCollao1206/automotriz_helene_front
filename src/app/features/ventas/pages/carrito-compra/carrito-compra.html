@@ -1,0 +1,214 @@
+<div class="container mx-auto p-5">
+    <div class="mb-8 justify-center text-center">
+        <h1 class="texto-titulo font-bold text-zinc-800 mb-2">
+            Mi Carrito de Compras
+        </h1>
+        <p class="texto-pequeño text-zinc-600">
+            Revisa y gestiona los productos de tu carrito
+        </p>
+    </div>
+
+    <div *ngIf="itemsCarrito.length === 0" class="bg-white rounded-2xl shadow-lg border border-zinc-200 p-12">
+        <div class="text-center">
+            <i class="fas fa-shopping-cart text-8xl text-zinc-300 mb-6"></i>
+            <h2 class="texto-grande font-bold text-zinc-700 mb-4">Tu carrito está vacío</h2>
+            <p class="texto-pequeño text-zinc-500 mb-8">
+                Agrega productos para comenzar tu compra
+            </p>
+            <button (click)="continuarComprando()" class="btn btn-azul texto-mediano px-8 py-3">
+                <i class="fas fa-store mr-2"></i>
+                Ir al Catálogo
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="itemsCarrito.length > 0" class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+        <div class="lg:col-span-2 space-y-8">
+
+            <div class="bg-white rounded-xl shadow-md border border-zinc-200 p-4 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-box text-blue-600"></i>
+                    <span class="texto-pequeño font-semibold text-zinc-700">
+                        {{ obtenerCantidadTotal() }} {{ obtenerCantidadTotal() === 1 ? 'producto' : 'productos' }}
+                    </span>
+                </div>
+                <button (click)="vaciarCarrito()"
+                    class="texto-chico text-red-500 hover:text-red-700 transition-colors font-semibold cursor-pointer">
+                    <i class="fas fa-trash mr-1"></i>
+                    Vaciar carrito
+                </button>
+            </div>
+
+            <div class="space-y-8">
+                <div *ngFor="let item of itemsCarrito"
+                    class="bg-white rounded-xl shadow-md border border-zinc-200 p-5 hover:shadow-lg transition-shadow">
+
+                    <div class="grid grid-cols-12 gap-4 items-center">
+
+                        <div class="col-span-12 sm:col-span-3 lg:col-span-2 flex justify-center sm:justify-start">
+                            <div class="flex-shrink-0 cursor-pointer" (click)="verDetalleProducto(item.producto.id)">
+                                <img [src]="obtenerUrlImagen(item.producto)"
+                                    [alt]="obtenerNombreCompleto(item.producto)"
+                                    class="w-24 h-24 object-contain rounded-lg">
+                            </div>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-9 lg:col-span-4">
+                            <h3 class="texto-pequeño lg:text-left text-center font-semibold text-zinc-800 mb-4 cursor-pointer hover:text-blue-600 transition-colors"
+                                (click)="verDetalleProducto(item.producto.id)">
+                                {{ obtenerNombreCompleto(item.producto) }}
+                            </h3>
+                            <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                                <span class="badge-azul texto-chico">
+                                    <i class="fas fa-tag mr-1"></i>
+                                    {{ item.producto.categoria }}
+                                </span>
+                                <span class="badge-verde texto-chico">
+                                    <i class="fas fa-copyright mr-1"></i>
+                                    {{ item.producto.marca }}
+                                </span>
+                            </div>
+
+                            <div *ngIf="item.producto.stock < item.producto.stockMinimo"
+                                class="mt-2 flex items-center gap-2 text-yellow-600 sm:hidden">
+                                <i class="fas fa-exclamation-triangle texto-chico"></i>
+                                <span class="texto-chico font-medium">Stock bajo - Solo {{ item.producto.stock }}
+                                    disponibles</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="col-span-12 sm:col-span-6 lg:col-span-3 flex justify-center sm:justify-start lg:justify-center">
+                            <div class="flex flex-col gap-1 w-full sm:w-auto">
+                                <span
+                                    class="texto-chico text-zinc-600 font-medium text-center sm:text-left lg:text-center">Cantidad</span>
+                                <div
+                                    class="flex items-center border border-zinc-300 rounded-lg overflow-hidden w-full sm:w-auto">
+                                    <button (click)="disminuirCantidad(item)" [disabled]="item.cantidad <= 1"
+                                        class="px-3 py-1 bg-zinc-100 hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex-1 sm:flex-none">
+                                        <i class="fas fa-minus texto-chico"></i>
+                                    </button>
+
+                                    <span
+                                        class="px-4 py-1 texto-pequeño font-semibold border-x border-zinc-300 flex-1 sm:flex-none text-center">
+                                        {{ item.cantidad }}
+                                    </span>
+
+                                    <button (click)="aumentarCantidad(item)"
+                                        [disabled]="item.cantidad >= item.producto.stock"
+                                        class="px-3 py-1 bg-zinc-100 hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex-1 sm:flex-none">
+                                        <i class="fas fa-plus texto-chico"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-8 sm:col-span-4 lg:col-span-2 text-center sm:text-right">
+                            <p class="texto-chico text-zinc-500">
+                                S/ {{ item.precioUnitario | number:'1.2-2' }} c/u
+                            </p>
+                            <p class="texto-intermedio font-bold text-blue-600">
+                                S/ {{ item.subtotal | number:'1.2-2' }}
+                            </p>
+                        </div>
+
+                        <div class="col-span-4 sm:col-span-2 lg:col-span-1 flex justify-center">
+                            <button (click)="eliminarProducto(item)"
+                                class="text-red-500 hover:text-red-700 transition-colors cursor-pointer p-2">
+                                <i class="fas fa-trash texto-pequeño"></i>
+                            </button>
+                        </div>
+
+                        <div *ngIf="item.producto.stock < item.producto.stockMinimo"
+                            class="col-span-12 mt-2 hidden sm:flex items-center gap-2 text-yellow-600">
+                            <i class="fas fa-exclamation-triangle texto-chico"></i>
+                            <span class="texto-chico font-medium">Stock bajo - Solo {{ item.producto.stock }}
+                                disponibles</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl shadow-lg border border-zinc-200 p-6 sticky top-5">
+
+                <h2 class="texto-intermedio font-bold text-zinc-800 mb-6 pb-4 border-b border-zinc-200">
+                    <i class="fas fa-file-invoice mr-2 text-blue-600"></i>
+                    Resumen de Compra
+                </h2>
+
+                <div class="space-y-4 mb-6">
+
+                    <div class="flex justify-between items-center">
+                        <span class="texto-pequeño text-zinc-600">Productos ({{ obtenerCantidadTotal() }})</span>
+                        <span class="texto-pequeño font-semibold text-zinc-800">
+                            S/ {{ obtenerSubtotal() | number:'1.2-2' }}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="texto-pequeño text-zinc-600">IGV (18%)</span>
+                        <span class="texto-pequeño font-semibold text-zinc-800">
+                            S/ {{ calcularIGV() | number:'1.2-2' }}
+                        </span>
+                    </div>
+
+                    <div class="border-t border-zinc-200 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="texto-mediano font-bold text-zinc-800">Total</span>
+                            <span class="texto-grande font-bold text-green-600">
+                                S/ {{ calcularTotal() | number:'1.2-2' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <button (click)="irAPagar()" class="w-full btn btn-azul texto-mediano py-3 mb-3">
+                    <i class="fas fa-credit-card mr-2"></i>
+                    Proceder al Pago
+                </button>
+
+                <button (click)="continuarComprando()" class="w-full btn btn-gris texto-mediano py-3 mt-3">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Continuar Comprando
+                </button>
+
+                <div class="bg-blue-50 rounded-lg p-4 mt-4">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="texto-chico text-blue-800 font-semibold mb-1">
+                                Información importante
+                            </p>
+                            <p class="texto-chico text-blue-700">
+                                Los precios incluyen IGV. El stock está sujeto a disponibilidad.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-zinc-200">
+                    <p class="texto-chico text-zinc-600 mb-3 font-semibold">
+                        Métodos de pago aceptados:
+                    </p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="px-3 py-1 bg-zinc-100 rounded-lg texto-chico text-zinc-700">
+                            <i class="fas fa-money-bill-wave mr-1"></i>
+                            Efectivo
+                        </span>
+                        <span class="px-3 py-1 bg-zinc-100 rounded-lg texto-chico text-zinc-700">
+                            <i class="fas fa-credit-card mr-1"></i>
+                            Tarjeta
+                        </span>
+                        <span class="px-3 py-1 bg-zinc-100 rounded-lg texto-chico text-zinc-700">
+                            <i class="fas fa-mobile-alt mr-1"></i>
+                            Yape/Plin
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

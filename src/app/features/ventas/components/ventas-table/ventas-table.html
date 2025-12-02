@@ -1,0 +1,58 @@
+<div class="overflow-x-auto">
+    <table class="w-full">
+        <thead class="border-b border-zinc-200">
+            <tr class="bg-zinc-100 text-center">
+                <th class="texto-pequeño th-tabla">Código</th>
+                <th class="texto-pequeño th-tabla">Fecha</th>
+                <th class="texto-pequeño th-tabla">DNI/RUC</th>
+                <th class="texto-pequeño th-tabla">Comprobante</th>
+                <th class="texto-pequeño th-tabla">Método Pago</th>
+                <th *ngIf="puedeVerVendedor" class="texto-pequeño th-tabla">Vendedor</th>
+                <th class="texto-pequeño th-tabla">Total</th>
+                <th class="texto-pequeño th-tabla">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-200">
+            <tr *ngFor="let venta of ventas; trackBy: trackByVentaId"
+                class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                <td class="texto-pequeño td1-tabla font-medium text-blue-600">
+                    {{ venta.numeroComprobante }}
+                </td>
+                <td class="texto-pequeño td1-tabla">
+                    {{ formatearFecha(venta.fecha) }}
+                </td>
+                <td class="texto-pequeño td1-tabla">
+                    {{ obtenerDniRuc(venta.cliente) }}
+                </td>
+                <td class="py-3 px-3">
+                    <span
+                        [class]="venta.tipoComprobante === 'FACTURA' ? 'badge-azul texto-chico' : 'badge-verde texto-chico'">
+                        {{ venta.tipoComprobante }}
+                    </span>
+                </td>
+                <td class="texto-pequeño td1-tabla">
+                    {{ venta.metodoPago }}
+                </td>
+                <td *ngIf="puedeVerVendedor" class="texto-pequeño td1-tabla">
+                    {{ venta.usuario }}
+                </td>
+                <td class="py-3 px-3 texto-pequeño font-semibold text-green-600">
+                    S/ {{ venta.total | number:'1.2-2' }}
+                </td>
+                <td class="py-3 px-3">
+                    <div class="flex justify-center items-center gap-2">
+                        <button class="btn-ver" (click)="onVerDetalleClick(venta.id)"
+                            [attr.aria-label]="'Ver detalle de venta ' + venta.id">
+                            <i class="fas fa-eye texto-mediano"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="ventas.length === 0" class="bg-zinc-50 px-6 py-12 text-center text-zinc-500 texto-pequeño">
+    <i class="fas fa-inbox text-4xl mb-3 text-zinc-400"></i>
+    <p>No se encontraron ventas</p>
+</div>

@@ -1,0 +1,338 @@
+<div class="container mx-auto p-5">
+    <div class="mb-8 justify-center text-center">
+        <h1 class="texto-titulo font-bold text-zinc-800 mb-2">
+            Finalizar Compra
+        </h1>
+        <p class="texto-pequeño text-zinc-600">
+            Completa los datos para procesar tu venta
+        </p>
+    </div>
+
+    <div class="mb-8">
+        <div class="flex items-center justify-center">
+            <div class="flex items-center">
+                <div class="flex items-center">
+                    <div
+                        [class]="pasoActual >= 1 ? 'w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold' : 'w-10 h-10 rounded-full bg-zinc-300 text-zinc-600 flex items-center justify-center font-bold'">
+                        1
+                    </div>
+                    <div class="ml-2 hidden sm:block">
+                        <p
+                            [class]="pasoActual >= 1 ? 'texto-pequeño font-semibold text-blue-600' : 'texto-pequeño font-semibold text-zinc-500'">
+                            Datos del Cliente
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    [class]="pasoActual >= 2 ? 'w-16 sm:w-24 h-1 bg-blue-600 mx-2' : 'w-16 sm:w-24 h-1 bg-zinc-300 mx-2'">
+                </div>
+
+                <div class="flex items-center">
+                    <div
+                        [class]="pasoActual >= 2 ? 'w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold' : 'w-10 h-10 rounded-full bg-zinc-300 text-zinc-600 flex items-center justify-center font-bold'">
+                        2
+                    </div>
+                    <div class="ml-2 hidden sm:block">
+                        <p
+                            [class]="pasoActual >= 2 ? 'texto-pequeño font-semibold text-blue-600' : 'texto-pequeño font-semibold text-zinc-500'">
+                            Método de Pago
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    [class]="pasoActual >= 3 ? 'w-16 sm:w-24 h-1 bg-blue-600 mx-2' : 'w-16 sm:w-24 h-1 bg-zinc-300 mx-2'">
+                </div>
+
+                <div class="flex items-center">
+                    <div
+                        [class]="pasoActual >= 3 ? 'w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold' : 'w-10 h-10 rounded-full bg-zinc-300 text-zinc-600 flex items-center justify-center font-bold'">
+                        3
+                    </div>
+                    <div class="ml-2 hidden sm:block">
+                        <p
+                            [class]="pasoActual >= 3 ? 'texto-pequeño font-semibold text-blue-600' : 'texto-pequeño font-semibold text-zinc-500'">
+                            Confirmación
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+
+            <div *ngIf="pasoActual === 1" class="bg-white rounded-xl shadow-lg border border-zinc-200 p-6">
+                <h2 class="texto-intermedio font-bold text-zinc-800 mb-6 pb-4 border-b border-zinc-200">
+                    <i class="fas fa-user mr-2 text-blue-600"></i>
+                    Datos del Cliente
+                </h2>
+
+                <div class="mb-6">
+                    <label class="texto-pequeño font-semibold text-zinc-700 mb-3 block">
+                        Tipo de Documento
+                    </label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button (click)="seleccionarTipoDocumento('DNI')"
+                            [class]="tipoDocumento === 'DNI' ? 'p-4 rounded-lg border-2 border-blue-600 bg-blue-50 transition-all cursor-pointer' : 'p-4 rounded-lg border-2 border-zinc-300 hover:border-blue-400 transition-all cursor-pointer'">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-id-card texto-grande mb-2"
+                                    [class]="tipoDocumento === 'DNI' ? 'text-blue-600' : 'text-zinc-400'"></i>
+                                <span class="texto-pequeño font-semibold"
+                                    [class]="tipoDocumento === 'DNI' ? 'text-blue-600' : 'text-zinc-600'">DNI</span>
+                                <span class="texto-chico text-zinc-500 mt-1">Boleta</span>
+                            </div>
+                        </button>
+
+                        <button (click)="seleccionarTipoDocumento('RUC')"
+                            [class]="tipoDocumento === 'RUC' ? 'p-4 rounded-lg border-2 border-blue-600 bg-blue-50 transition-all cursor-pointer' : 'p-4 rounded-lg border-2 border-zinc-300 hover:border-blue-400 transition-all cursor-pointer'">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-building texto-grande mb-2"
+                                    [class]="tipoDocumento === 'RUC' ? 'text-blue-600' : 'text-zinc-400'"></i>
+                                <span class="texto-pequeño font-semibold"
+                                    [class]="tipoDocumento === 'RUC' ? 'text-blue-600' : 'text-zinc-600'">RUC</span>
+                                <span class="texto-chico text-zinc-500 mt-1">Factura</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="texto-pequeño font-semibold text-zinc-700 mb-2 block">
+                        Número de {{ tipoDocumento }}
+                    </label>
+                    <div class="flex gap-8">
+                        <input type="text" [(ngModel)]="numeroDocumento"
+                            [placeholder]="tipoDocumento === 'DNI' ? 'Ingresa 8 dígitos' : 'Ingresa 11 dígitos'"
+                            [maxlength]="tipoDocumento === 'DNI' ? 8 : 11"
+                            class="flex-1 px-4 py-3 border border-zinc-300 rounded-lg texto-pequeño focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            [disabled]="buscandoCliente || datosCliente !== null">
+
+                        <button (click)="buscarCliente()" [disabled]="buscandoCliente || datosCliente !== null"
+                            class="btn btn-azul texto-pequeño px-6 whitespace-nowrap">
+                            <i [class]="buscandoCliente ? 'fas fa-spinner fa-spin mr-2' : 'fas fa-search mr-2'"></i>
+                            {{ buscandoCliente ? 'Buscando...' : 'Buscar' }}
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="datosCliente" class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-600 texto-intermedio"></i>
+                            <span class="texto-pequeño font-semibold text-green-800">
+                                Datos del cliente
+                            </span>
+                        </div>
+                        <button (click)="limpiarDatosCliente()"
+                            class="texto-pequeño text-red-600 hover:text-red-700 font-semibold cursor-pointer">
+                            <i class="fas fa-times mr-1"></i>
+                            Cambiar
+                        </button>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div>
+                            <span class="texto-chico text-zinc-600 font-medium">{{ datosCliente.tipoDocumento }}:</span>
+                            <span class="texto-pequeño text-zinc-800 ml-2">{{ datosCliente.numeroDocumento }}</span>
+                        </div>
+                        <div>
+                            <span class="texto-chico text-zinc-600 font-medium">Nombre:</span>
+                            <span class="texto-pequeño text-zinc-800 ml-2">{{ datosCliente.nombre }}</span>
+                        </div>
+                        <div *ngIf="datosCliente.direccion">
+                            <span class="texto-chico text-zinc-600 font-medium">Dirección:</span>
+                            <span class="texto-pequeño text-zinc-800 ml-2">{{ datosCliente.direccion }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-8 gap-3 mt-8">
+                    <button (click)="volverAlCarrito()" class="btn btn-gris texto-mediano py-3 px-6">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Volver al Carrito
+                    </button>
+                    <button (click)="siguientePaso()" [disabled]="!datosCliente"
+                        class="btn btn-azul texto-mediano py-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Continuar
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="pasoActual === 2" class="bg-white rounded-xl shadow-lg border border-zinc-200 p-6">
+                <h2 class="texto-intermedio font-bold text-zinc-800 mb-6 pb-4 border-b border-zinc-200">
+                    <i class="fas fa-credit-card mr-2 text-blue-600"></i>
+                    Método de Pago
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
+                    <div *ngFor="let metodo of metodosPago" (click)="seleccionarMetodoPago(metodo.id)"
+                        [class]="metodoPagoSeleccionado === metodo.id ? 'p-5 rounded-lg border-2 border-blue-600 bg-blue-50 transition-all cursor-pointer' : 'p-5 rounded-lg border-2 border-zinc-300 hover:border-blue-400 transition-all cursor-pointer'">
+                        <div class="flex items-center gap-3">
+                            <div
+                                [class]="metodoPagoSeleccionado === metodo.id ? 'w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-zinc-400 flex items-center justify-center'">
+                                <div *ngIf="metodoPagoSeleccionado === metodo.id"
+                                    class="w-3 h-3 rounded-full bg-blue-600"></div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="texto-pequeño font-semibold"
+                                    [class]="metodoPagoSeleccionado === metodo.id ? 'text-blue-600' : 'text-zinc-700'">
+                                    {{ metodo.nombre }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="metodosPago.length === 0" class="text-center py-8">
+                    <i class="fas fa-exclamation-triangle text-6xl text-yellow-500 mb-4"></i>
+                    <p class="texto-pequeño text-zinc-600">No hay métodos de pago disponibles</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-8 gap-3 mt-8">
+                    <button (click)="pasoAnterior()" class="btn btn-gris texto-mediano py-3 px-6">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Anterior
+                    </button>
+                    <button (click)="siguientePaso()" [disabled]="!metodoPagoSeleccionado"
+                        class="btn btn-azul texto-mediano py-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Continuar
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="pasoActual === 3" class="bg-white rounded-xl shadow-lg border border-zinc-200 p-6">
+                <h2 class="texto-intermedio font-bold text-zinc-800 mb-4 pb-4 border-b border-zinc-200">
+                    <i class="fas fa-check-circle mr-2 text-blue-600"></i>
+                    Confirmar Compra
+                </h2>
+
+                <!-- Resumen del cliente -->
+                <div class="mb-4 p-4">
+                    <h3 class="texto-pequeño font-semibold text-zinc-800 mb-4">
+                        <i class="fas fa-user mr-2 text-blue-600"></i>
+                        Datos del Cliente
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="texto-chico text-zinc-600">{{ datosCliente?.tipoDocumento }}:</span>
+                            <span class="texto-chico font-semibold text-zinc-800">{{ datosCliente?.numeroDocumento
+                                }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="texto-chico text-zinc-600">Nombre:</span>
+                            <span class="texto-chico font-semibold text-zinc-800">{{ datosCliente?.nombre }}</span>
+                        </div>
+                        <div *ngIf="datosCliente?.direccion" class="flex justify-between">
+                            <span class="texto-chico text-zinc-600">Dirección:</span>
+                            <span
+                                class="texto-chico font-semibold text-zinc-800 truncate max-w-[200px] sm:max-w-[300px]">
+                                {{ datosCliente?.direccion }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="texto-chico text-zinc-600">Comprobante:</span>
+                            <span class="texto-chico font-semibold text-zinc-800">{{ getTipoComprobante() }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4 p-4">
+                    <h3 class="texto-pequeño font-semibold text-zinc-800 mb-4">
+                        <i class="fas fa-credit-card mr-2 text-blue-600"></i>
+                        Método de Pago
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span class="texto-pequeño font-semibold text-zinc-800">{{ getMetodoPagoNombre() }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-4 p-4">
+                    <h3 class="texto-pequeño font-semibold text-zinc-800 mb-4">
+                        <i class="fas fa-shopping-cart mr-2 text-blue-600"></i>
+                        Productos ({{ obtenerCantidadTotal() }})
+                    </h3>
+                    <div class="space-y-3 max-h-60 overflow-y-auto">
+                        <div *ngFor="let item of itemsCarrito"
+                            class="flex justify-between items-center py-2 border-b border-zinc-200">
+                            <div class="flex-1">
+                                <p class="texto-chico font-medium text-zinc-800">{{ obtenerNombreCompleto(item.producto)
+                                    }}</p>
+                                <p class="texto-chico text-zinc-500">{{ item.cantidad }} x S/ {{ item.precioUnitario |
+                                    number:'1.2-2' }}</p>
+                            </div>
+                            <span class="texto-pequeño font-semibold text-zinc-800">S/ {{ item.subtotal | number:'1.2-2'
+                                }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-8 gap-3 mt-8">
+                    <button (click)="pasoAnterior()" class="btn btn-gris texto-mediano py-3 px-6"
+                        [disabled]="procesandoVenta">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Anterior
+                    </button>
+                    <button (click)="finalizarCompra()" [disabled]="procesandoVenta"
+                        class="btn btn-azul texto-mediano py-3">
+                        <i [class]="procesandoVenta ? 'fas fa-spinner fa-spin mr-2' : 'fas fa-check mr-2'"></i>
+                        {{ procesandoVenta ? 'Procesando...' : 'Finalizar Compra' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl shadow-lg border border-zinc-200 p-6 sticky top-5">
+                <h2 class="texto-intermedio font-bold text-zinc-800 mb-6 pb-4 border-b border-zinc-200">
+                    <i class="fas fa-file-invoice mr-2 text-blue-600"></i>
+                    Resumen del Pedido
+                </h2>
+
+                <div class="space-y-4 mb-6">
+                    <div class="flex justify-between items-center">
+                        <span class="texto-pequeño text-zinc-600">Productos ({{ obtenerCantidadTotal() }})</span>
+                        <span class="texto-pequeño font-semibold text-zinc-800">
+                            S/ {{ obtenerSubtotal() | number:'1.2-2' }}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="texto-pequeño text-zinc-600">IGV (18%)</span>
+                        <span class="texto-pequeño font-semibold text-zinc-800">
+                            S/ {{ calcularIGV() | number:'1.2-2' }}
+                        </span>
+                    </div>
+
+                    <div class="border-t border-zinc-200 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="texto-mediano font-bold text-zinc-800">Total</span>
+                            <span class="texto-grande font-bold text-green-600">
+                                S/ {{ calcularTotal() | number:'1.2-2' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="texto-chico text-blue-800 font-semibold mb-1">
+                                Información
+                            </p>
+                            <p class="texto-chico text-blue-700">
+                                Los precios incluyen IGV. Verifica que todos los datos sean correctos antes de
+                                finalizar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

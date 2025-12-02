@@ -261,4 +261,17 @@ export class AuthService {
     return roles.some(rol => rolesUsuario.includes(rol));
   }
 
+  //VENTAS
+  puedeRealizarVentas(): boolean {
+    return this.esVendedor();
+  }
+
+  puedeVerTodasLasVentas(): boolean {
+    return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN']);
+  }
+  
+  puedeVerHistorialVentas(): boolean {
+    return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN', 'ROLE_SELLER']);
+  }
+
 }

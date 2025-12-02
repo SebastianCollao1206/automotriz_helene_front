@@ -2,6 +2,8 @@ import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth/auth-service';
 import { Subscription } from 'rxjs';
+import { Carrito } from '../../../core/services/carrito/carrito';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -20,9 +22,16 @@ export class Header implements OnInit, OnDestroy {
   rolPrincipal: string = '';
   imagenUsuario: string = '';
 
+  isCarritoOpen = false;
+  cantidadItemsCarrito = 0;
+  itemsCarrito: any[] = [];
+
   private subscriptions: Subscription[] = [];
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+    private carritoService: Carrito,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.cargarDatosUsuario();
@@ -31,6 +40,12 @@ export class Header implements OnInit, OnDestroy {
       this.cargarDatosUsuario();
     });
     this.subscriptions.push(sub);
+
+    const carritoSub = this.carritoService.items$.subscribe(items => {
+      this.itemsCarrito = items;
+      this.cantidadItemsCarrito = this.carritoService.obtenerCantidadTotal();
+    });
+    this.subscriptions.push(carritoSub);
   }
 
   ngOnDestroy(): void {
@@ -83,4 +98,36 @@ export class Header implements OnInit, OnDestroy {
     });
   }
 
+  esVendedor(): boolean {
+    return this.authService.esVendedor();
+  }
+
+  toggleCarrito(): void {
+    this.isCarritoOpen = !this.isCarritoOpen;
+    if (this.isCarritoOpen) {
+      this.isNotificationsOpen = false;
+      this.isLogoutOpen = false;
+    }
+  }
+
+  closeCarrito(): void {
+    this.isCarritoOpen = false;
+  }
+
+  obtenerSubtotalCarrito(): number {
+    return this.carritoService.obtenerSubtotal();
+  }
+
+  eliminarDelCarrito(productoId: number): void {
+    this.carritoService.eliminarProducto(productoId);
+  }
+
+  verCarritoCompleto(): void {
+    this.closeCarrito();
+    this.router.navigate(['venta/carrito']);
+  }
+
+  obtenerNombreProducto(producto: any): string {
+    return `${producto.nombre} ${producto.marca} ${producto.tipoProducto} ${producto.cantidadTamanio}${producto.unidadMedida}`;
+  }
 }

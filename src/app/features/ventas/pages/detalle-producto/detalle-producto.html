@@ -1,0 +1,218 @@
+<div class="container p-5 mx-auto">
+    
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando producto...</span>
+    </div>
+
+    <div *ngIf="!cargandoDatos && productoActual" class="mb-12">
+        <div class="bg-white overflow-hidden">
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+
+                <div class="flex items-center justify-center p-8 md:p-2 relative">
+
+                    <img [src]="obtenerUrlImagen(productoActual)" [alt]="obtenerNombreCompleto(productoActual)"
+                        class="max-h-100 object-contain">
+
+                    <div *ngIf="productoActual.descuento > 0"
+                        class="absolute top-4 right-10 bg-red-500 text-white px-4 py-2 rounded-full texto-pequeño font-bold shadow-lg">
+                        -{{ productoActual.descuento }}%
+                    </div>
+
+                    <div *ngIf="productoActual.stock < productoActual.stockMinimo"
+                        class="absolute top-4 left-0 md:left-2 bg-yellow-500 text-white px-4 py-2 rounded-full texto-pequeño font-bold shadow-lg">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                        Stock Bajo
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-between">
+                    <div>
+                        <h1 class="texto-grande font-bold text-zinc-800 mb-5">
+                            {{ obtenerNombreCompleto(productoActual) }}
+                        </h1>
+
+                        <div class="gap-8 flex mb-6 items-center">
+                            <span class="badge-azul texto-chico">
+                                <i class="fas fa-tag mr-2"></i>
+                                {{ productoActual.categoria }}
+                            </span>
+                            <span class="badge-verde texto-chico">
+                                <i class="fas fa-copyright mr-1"></i>
+                                {{ productoActual.marca }}
+                            </span>
+                            <span class="badge-anaranjado texto-chico">
+                                <i class="fas fa-box mr-1"></i>
+                                {{ productoActual.tipoProducto }}
+                            </span>
+                        </div>
+
+                        <div class="mb-6">
+                            <p class="texto-pequeño text-zinc-600 leading-relaxed text-justify">
+                                {{ productoActual.descripcion }}
+                            </p>
+                        </div>
+
+                        <div class="rounded-xl py-4 mb-6">
+                            <div class="grid grid-cols-2 gap-4 texto-pequeño">
+                                <div>
+                                    <span class="text-zinc-500">Contenido:</span>
+                                    <span class="font-semibold text-zinc-800 ml-2">
+                                        {{ productoActual.cantidadTamanio }} {{ productoActual.unidadMedida }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-zinc-500">Stock disponible:</span>
+                                    <span class="font-semibold ml-2"
+                                        [class.text-red-600]="productoActual.stock < productoActual.stockMinimo"
+                                        [class.text-green-600]="productoActual.stock >= productoActual.stockMinimo">
+                                        {{ productoActual.stock }} unidades
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <p *ngIf="productoActual.descuento > 0"
+                                class="texto-mediano text-zinc-400 line-through mb-3">
+                                S/ {{ productoActual.precioVenta | number:'1.2-2' }}
+                            </p>
+                            <p class="texto-titulo font-bold text-blue-600">
+                                S/ {{ calcularPrecioConDescuento(productoActual) | number:'1.2-2' }}
+                            </p>
+                            <p *ngIf="productoActual.descuento > 0"
+                                class="texto-pequeño text-green-600 font-semibold mt-3">
+                                Ahorras: S/ {{ calcularAhorro(productoActual) | number:'1.2-2' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <label class="texto-pequeño font-semibold text-zinc-700">Cantidad:</label>
+                            <div class="flex items-center border border-zinc-300 rounded-lg overflow-hidden">
+
+                                <button (click)="disminuirCantidad()" [disabled]="cantidad <= 1"
+                                    class="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <i class="fas fa-minus texto-pequeño"></i>
+                                </button>
+
+                                <input type="number" [(ngModel)]="cantidad" (ngModelChange)="validarCantidad()" min="1"
+                                    [max]="productoActual.stock"
+                                    class="w-20 text-center texto-mediano font-semibold border-x border-zinc-300 py-2">
+
+                                <button (click)="aumentarCantidad()" [disabled]="cantidad >= productoActual.stock"
+                                    class="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <i class="fas fa-plus texto-pequeño"></i>
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
+                            <button (click)="agregarAlCarrito()" [disabled]="productoActual.stock === 0"
+                                class="btn btn-azul py-3 texto-mediano font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                {{ productoActual.stock > 0 ? 'Agregar al Carrito' : 'Sin Stock' }}
+                            </button>
+                            <button (click)="volver()" class="btn btn-gris texto-mediano font-semibold">
+                                <i class="fas fa-arrow-left mr-2"></i>
+                                Volver
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!cargandoDatos && productosRelacionados.length > 0" class="mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="texto-grande font-bold text-zinc-800">
+                <i class="fas fa-box-open mr-2 text-blue-600"></i>
+                Productos Relacionados
+            </h2>
+        </div>
+
+        <div class="relative bg-white p-6">
+            <swiper-container #swiperRelacionados slides-per-view="1" space-between="20" navigation="true"
+                pagination="true"
+                breakpoints='{"640": {"slidesPerView": 2, "spaceBetween": 20}, "768": {"slidesPerView": 3, "spaceBetween": 20}, "1024": {"slidesPerView": 4, "spaceBetween": 25}, "1280": {"slidesPerView": 5, "spaceBetween": 30}}'>
+
+                <swiper-slide *ngFor="let producto of productosRelacionados; trackBy: trackByProductoId "> 
+
+                    <div class="mb-12 group">
+                        <div class="producto-card bg-white rounded-2xl shadow-lg border border-zinc-200 overflow-hidden cursor-pointer 
+                    transition-all duration-300 group" (click)="verDetalleProducto(producto.id)">
+
+                            <div class="relative overflow-hidden justify-center items-center flex px-6 py-4">
+
+                                <img [src]="obtenerUrlImagen(producto)" [alt]="obtenerNombreCompleto(producto)"
+                                    class="h-50 md:h-40 object-scale-down transition-transform duration-300 justify-center items-center">
+
+                                <div *ngIf="producto.descuento > 0"
+                                    class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full texto-chico font-bold">
+                                    -{{ producto.descuento }}%
+                                </div>
+
+                                <div *ngIf="producto.stock < producto.stockMinimo"
+                                    class="absolute top-3 left-3 bg-yellow-500 text-white px-3 py-1 rounded-full texto-chico font-bold">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    Stock Bajo
+                                </div>
+
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                                    <button class="btn btn-azul texto-chico transform transition-transform duration-300"
+                                        (click)="agregarRelacionadoAlCarrito(producto, $event)">
+                                        <i class="fas fa-shopping-cart mr-1"></i>
+                                        Añadir
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-5">
+                                <h3 class="texto-pequeño font-semibold text-zinc-700 mb-3">
+                                    {{ obtenerNombreCompleto(producto) }}
+                                </h3>
+
+                                <div class="flex items-center gap-6 mb-4">
+
+                                    <span class="texto-chico text-zinc-500">
+                                        <i class="fas fa-box mr-1"></i>
+                                        Stock: {{ producto.stock }}
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p *ngIf="producto.descuento > 0"
+                                            class="texto-chico text-zinc-400 line-through">
+                                            S/ {{ producto.precioVenta | number:'1.2-2' }}
+                                        </p>
+                                        <p class="texto-intermedio font-bold text-blue-600">
+                                            S/ {{ calcularPrecioConDescuento(producto) | number:'1.2-2' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </swiper-slide>
+            </swiper-container>
+        </div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="!cargandoDatos && !productoActual" class="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+        <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
+        <p class="texto-intermedio text-red-700 font-semibold mb-4">
+            No se pudo cargar el producto
+        </p>
+        <button (click)="volver()" class="btn btn-azul">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Volver al Catálogo
+        </button>
+    </div>
+</div>

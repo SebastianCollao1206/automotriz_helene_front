@@ -43,16 +43,12 @@
                             [attr.aria-label]="'Editar pedido ' + pedido.id">
                             <i class="fas fa-edit texto-mediano"></i>
                         </button>
-                        <!-- <button
-                            *ngIf="puedeGestionar && pedido.estado !== 'CANCELADO' && pedido.estado !== 'ENTREGA_COMPLETA'"
-                            class="btn-eliminar" (click)="onCancelarClick(pedido.id)"
-                            [attr.aria-label]="'Cancelar pedido ' + pedido.id">
-                            <i class="fas fa-ban texto-mediano"></i>
-                        </button> -->
+
                         <button *ngIf="puedeGestionar && pedido.estado === 'PENDIENTE'" class="btn-eliminar"
                             (click)="onCancelarClick(pedido.id)" [attr.aria-label]="'Cancelar pedido ' + pedido.id">
                             <i class="fas fa-ban texto-mediano"></i>
                         </button>
+
                         <button
                             *ngIf="puedeRecibir && (pedido.estado === 'PENDIENTE' || pedido.estado === 'ENTREGA_INCOMPLETA')"
                             class="btn-editar" (click)="onRecibirClick(pedido.id)"

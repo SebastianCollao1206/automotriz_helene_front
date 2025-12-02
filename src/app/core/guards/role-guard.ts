@@ -51,7 +51,14 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     //PARA PREDICCIONES
     case 'verPredicciones':
       tienePermiso = authService.puedeVerPredicciones();
-      break;  
+      break;
+    //PARA VENTAS
+    case 'realizarVentas':
+      tienePermiso = authService.puedeRealizarVentas();
+      break;
+    case 'verHistorialVentas':
+      tienePermiso = authService.puedeVerHistorialVentas();
+      break;
     //DEFECTO
     default:
       tienePermiso = true;

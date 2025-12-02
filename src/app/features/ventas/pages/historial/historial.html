@@ -1,0 +1,140 @@
+<div class="container mx-auto p-5">
+    <div class="flex justify-center">
+        <h2 class="texto-grande">Historial de Ventas</h2>
+    </div>
+
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando datos...</span>
+    </div>
+
+    <div *ngIf="!cargandoDatos">
+        <div class="mx-auto p-8">
+            <div class="flex items-center gap-2 texto-mediano cursor-pointer" [class.mb-5]="filtrosVisibles"
+                (click)="alternarFiltros()">
+                <i class="fas fa-filter text-zinc-600"></i>
+                <h3 class="font-semibold text-zinc-800 mr-2">Filtros</h3>
+                <i class="fas fa-chevron-down text-zinc-500 transition-transform duration-100"
+                    [class.rotate-180]="!filtrosVisibles"></i>
+            </div>
+
+            <div class="filtros-contenedor transition-all duration-300 ease-in-out overflow-hidden shadow-lg rounded-2xl"
+                [class.filtros-ocultos]="!filtrosVisibles">
+                <div class="bg-white p-6 border rounded-2xl border-zinc-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-calendar-alt text-zinc-500 mr-2"></i>
+                                Fecha
+                            </label>
+                            <div class="flex items-center gap-2">
+                                <button type="button" (click)="retrocederDia()" class="btn btn-avanzar texto-chico">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <input type="date" [(ngModel)]="filtroFecha" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario flex-1">
+                                <button type="button" (click)="avanzarDia()" class="btn btn-avanzar texto-chico">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-id-card text-zinc-500 mr-2"></i>
+                                DNI/RUC
+                            </label>
+                            <input type="text" [(ngModel)]="filtroDniRuc" (ngModelChange)="aplicarFiltros()"
+                                placeholder="Buscar DNI o RUC..." class="texto-pequeño input-formulario">
+                        </div>
+
+                        <div *ngIf="!puedeVerTodasLasVentas">
+                            <label class="label-formulario">
+                                <i class="fas fa-barcode text-zinc-500 mr-2"></i>
+                                Código Comprobante
+                            </label>
+                            <input type="text" [(ngModel)]="filtroCodigo" (ngModelChange)="aplicarFiltros()"
+                                placeholder="Ej: B001-00123..." class="texto-pequeño input-formulario">
+                        </div>
+
+                        <div *ngIf="puedeVerTodasLasVentas">
+                            <label class="label-formulario">
+                                <i class="fas fa-user-tie text-zinc-500 mr-2"></i>
+                                Vendedor
+                            </label>
+                            <input type="text" [(ngModel)]="filtroVendedor" (ngModelChange)="aplicarFiltros()"
+                                placeholder="Buscar vendedor..." class="texto-pequeño input-formulario">
+                        </div>
+
+                        <div class="flex items-center justify-center">
+                            <button class="btn btn-gris" (click)="limpiarFiltros()">
+                                <i class="fas fa-times mr-2"></i>
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!cargandoDatos">
+        <div class="mx-auto px-8 py-2">
+            <div class="rounded-2xl border border-zinc-200 overflow-hidden shadow-lg">
+                <app-ventas-table [ventas]="ventasPaginadas" [puedeVerVendedor]="puedeVerTodasLasVentas"
+                    (verDetalle)="onVerDetalle($event)">
+                </app-ventas-table>
+
+                <div
+                    class="bg-zinc-100 px-3 md:px-6 lg:px-12 py-4 border-t border-zinc-200 flex flex-col sm:flex-row justify-between gap-4 items-center">
+                    <div class="texto-pequeño text-zinc-700">
+                        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                            <span>
+                                Mostrando: <span class="font-semibold">{{ ventasPaginadas.length }}</span>
+                                de <span class="font-semibold">{{ ventasFiltradas.length }}</span> venta{{
+                                ventasFiltradas.length !== 1 ? 's' : '' }}
+                            </span>
+                            <span class="font-semibold text-blue-600">
+                                Total: S/ {{ totalVentasFiltradas | number:'1.2-2' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-1 sm:space-x-2 texto-pequeño">
+                        <button
+                            class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === 1" (click)="paginaAnterior()" aria-label="Página anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+
+                        <ng-container *ngFor="let pagina of paginasArray">
+                            <button *ngIf="pagina !== '...'"
+                                [class]="paginaActual === pagina 
+                                    ? 'px-2 sm:px-3 py-1 bg-zinc-500 hover:bg-zinc-600 text-white rounded transition-colors duration-200 cursor-pointer font-semibold'
+                                    : 'px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer'"
+                                (click)="onClickPagina(pagina)" [attr.aria-label]="'Ir a página ' + pagina"
+                                [attr.aria-current]="paginaActual === pagina ? 'page' : null">
+                                {{ pagina }}
+                            </button>
+
+                            <span *ngIf="pagina === '...'" class="px-1 sm:px-2 text-zinc-500 select-none"
+                                aria-hidden="true">
+                                ...
+                            </span>
+                        </ng-container>
+
+                        <button
+                            class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === totalPaginas || totalPaginas === 0" (click)="paginaSiguiente()"
+                            aria-label="Página siguiente">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-ventas-modal [mostrar]="mostrarModalDetalle" [venta]="ventaSeleccionada" (alCerrar)="cerrarModalDetalle()">
+</app-ventas-modal>

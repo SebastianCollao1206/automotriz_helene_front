@@ -77,6 +77,9 @@
   .badge-gris{
     @apply inline-block px-3 py-1 rounded-full font-medium bg-gray-100 text-gray-700;
   }
+  .badge-anaranjado{
+    @apply inline-block px-3 py-1 rounded-full font-medium bg-orange-100 text-orange-700;
+  }
   
   /* BOTONES*/
   .btn {
@@ -84,6 +87,9 @@
   }
   .btn-rojo {
     @apply bg-gradient-to-r from-red-700 to-red-500;
+  }
+  .btn-verde {
+    @apply bg-gradient-to-r from-green-700 to-green-500;
   }
   .btn-azul {
     @apply bg-gradient-to-r from-blue-500 to-blue-700;
@@ -101,6 +107,9 @@
   }
   .btn-ver {
     @apply text-green-600 hover:text-green-800 transition-colors p-2 hover:bg-green-100 rounded-lg cursor-pointer
+  }
+  .btn-avanzar {
+    @apply text-zinc-600 hover:text-zinc-800 transition-colors p-2 hover:bg-zinc-300 rounded-lg cursor-pointer
   }
 
   /*SIDEBAR*/

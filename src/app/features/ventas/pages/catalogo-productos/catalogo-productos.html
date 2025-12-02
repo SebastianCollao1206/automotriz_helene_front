@@ -1,0 +1,219 @@
+<div class="container p-5 mx-auto">
+    <div class="flex justify-center mb-6">
+        <h2 class="texto-grande">Catálogo de Productos</h2>
+    </div>
+
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando productos...</span>
+    </div>
+
+    <div *ngIf="!cargandoDatos">
+        <div class="mx-auto p-8">
+            <div class="flex items-center gap-2 texto-mediano cursor-pointer mb-5" (click)="alternarFiltros()">
+                <i class="fas fa-filter text-zinc-600"></i>
+                <h3 class="font-semibold text-zinc-800 mr-2">Filtros</h3>
+                <i class="fas fa-chevron-down text-zinc-500 transition-transform duration-100"
+                    [class.rotate-180]="!filtrosVisibles"></i>
+            </div>
+
+            <div class="filtros-contenedor transition-all duration-300 ease-in-out overflow-hidden shadow-lg rounded-2xl"
+                [class.filtros-ocultos]="!filtrosVisibles">
+                <div class="bg-white p-6 border rounded-2xl border-zinc-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                        <div class="lg:col-span-2">
+                            <label class="label-formulario">
+                                <i class="fas fa-search text-zinc-500 mr-2"></i>
+                                Buscar Producto
+                            </label>
+                            <input type="text" [(ngModel)]="filtroNombre" (ngModelChange)="aplicarFiltros()"
+                                placeholder="Nombre, marca, tipo..." class="texto-pequeño input-formulario">
+                        </div>
+
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-tag text-zinc-500 mr-2"></i>
+                                Categoría
+                            </label>
+                            <div class="relative inline-block w-full">
+                                <select [(ngModel)]="filtroCategoria" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario appearance-none">
+                                    <option value="">Todas</option>
+                                    <option *ngFor="let categoria of categorias" [value]="categoria.nombre">
+                                        {{ categoria.nombre }}
+                                    </option>
+                                </select>
+                                <i
+                                    class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-copyright text-zinc-500 mr-2"></i>
+                                Marca
+                            </label>
+                            <div class="relative inline-block w-full">
+                                <select [(ngModel)]="filtroMarca" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario appearance-none">
+                                    <option value="">Todas</option>
+                                    <option *ngFor="let marca of marcas" [value]="marca.nombre">
+                                        {{ marca.nombre }}
+                                    </option>
+                                </select>
+                                <i
+                                    class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-box text-zinc-500 mr-2"></i>
+                                Tipo
+                            </label>
+                            <div class="relative inline-block w-full">
+                                <select [(ngModel)]="filtroTipoProducto" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario appearance-none">
+                                    <option value="">Todos</option>
+                                    <option *ngFor="let tipo of tiposProducto" [value]="tipo.nombre">
+                                        {{ tipo.nombre }}
+                                    </option>
+                                </select>
+                                <i
+                                    class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-ruler text-zinc-500 mr-2"></i>
+                                Unidad
+                            </label>
+                            <div class="relative inline-block w-full">
+                                <select [(ngModel)]="filtroUnidadMedida" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario appearance-none">
+                                    <option value="">Todas</option>
+                                    <option *ngFor="let unidad of unidadesMedida" [value]="unidad.nombre">
+                                        {{ unidad.nombre }}
+                                    </option>
+                                </select>
+                                <i
+                                    class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mx-auto px-8 py-2">
+            <div *ngIf="productosPaginados.length === 0"
+                class="bg-zinc-50 rounded-2xl px-6 py-12 text-center text-zinc-500 texto-pequeño shadow-lg">
+                <i class="fas fa-box-open text-4xl mb-3 text-zinc-400"></i>
+                <p>No se encontraron productos</p>
+            </div>
+
+            <div *ngIf="productosPaginados.length > 0"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-9">
+
+                <div *ngFor="let producto of productosPaginados; trackBy: trackByProductoId" class="producto-card bg-white rounded-2xl shadow-lg border border-zinc-200 overflow-hidden cursor-pointer 
+                    transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group"
+                    (click)="onVerDetalleProducto(producto.id)">
+
+                    <div class="relative overflow-hidden justify-center items-center flex px-6 py-4">
+
+                        <img [src]="obtenerUrlImagen(producto)" [alt]="obtenerNombreCompleto(producto)"
+                            class="h-50 md:h-40 object-scale-down transition-transform duration-300 justify-center items-center">
+
+                        <div *ngIf="producto.descuento > 0"
+                            class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full texto-chico font-bold">
+                            -{{ producto.descuento }}%
+                        </div>
+
+                        <div *ngIf="producto.stock < producto.stockMinimo"
+                            class="absolute top-3 left-3 bg-yellow-500 text-white px-3 py-1 rounded-full texto-chico font-bold">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            Stock Bajo
+                        </div>
+
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                            <button class="btn btn-azul transform transition-transform duration-300"
+                                (click)="onAgregarAlCarrito(producto, $event)">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                Añadir
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-5">
+                        <h3 class="texto-pequeño font-semibold text-zinc-700 mb-3">
+                            {{ obtenerNombreCompleto(producto) }}
+                        </h3>
+
+                        <div class="flex items-center gap-6 mb-4">
+                            <!-- <span class="badge-azul texto-chico">
+                                {{ producto.categoria }}
+                            </span> -->
+                            <span class="texto-chico text-zinc-500">
+                                <i class="fas fa-box mr-1"></i>
+                                Stock: {{ producto.stock }}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p *ngIf="producto.descuento > 0" class="texto-chico text-zinc-400 line-through">
+                                    S/ {{ producto.precioVenta | number:'1.2-2' }}
+                                </p>
+                                <p class="texto-intermedio font-bold text-blue-600">
+                                    S/ {{ calcularPrecioConDescuento(producto) | number:'1.2-2' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="productosPaginados.length > 0"
+                class="mt-8 bg-zinc-100 px-3 md:px-6 lg:px-12 py-4 rounded-2xl border border-zinc-200 flex flex-col sm:flex-row justify-between gap-4 items-center shadow-lg">
+                <div class="texto-pequeño text-zinc-700">
+                    Mostrando: <span class="font-semibold">{{ productosPaginados.length }}</span>
+                    de <span class="font-semibold">{{ productosFiltrados.length }}</span> producto{{
+                    productosFiltrados.length !== 1 ? 's' : '' }}
+                </div>
+
+                <div class="flex items-center space-x-1 sm:space-x-2 texto-pequeño">
+                    <button
+                        class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        [disabled]="paginaActual === 1" (click)="paginaAnterior()" aria-label="Página anterior">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <ng-container *ngFor="let pagina of paginasArray">
+                        <button *ngIf="pagina !== '...'"
+                            [class]="paginaActual === pagina 
+                                ? 'px-2 sm:px-3 py-1 bg-zinc-500 hover:bg-zinc-600 text-white rounded transition-colors duration-200 cursor-pointer font-semibold'
+                                : 'px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer'"
+                            (click)="onClickPagina(pagina)" [attr.aria-label]="'Ir a página ' + pagina"
+                            [attr.aria-current]="paginaActual === pagina ? 'page' : null">
+                            {{ pagina }}
+                        </button>
+
+                        <span *ngIf="pagina === '...'" class="px-1 sm:px-2 text-zinc-500 select-none"
+                            aria-hidden="true">
+                            ...
+                        </span>
+                    </ng-container>
+
+                    <button
+                        class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        [disabled]="paginaActual === totalPaginas || totalPaginas === 0" (click)="paginaSiguiente()"
+                        aria-label="Página siguiente">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

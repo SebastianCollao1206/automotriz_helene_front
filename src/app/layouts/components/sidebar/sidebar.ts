@@ -114,14 +114,14 @@ export class Sidebar implements OnInit, OnDestroy {
           visible: true
         },
         {
-          label: 'Tipos de Producto',
+          label: 'Variantes',
           icon: 'fas fa-list',
           route: '/tipos-producto',
           baseRoute: 'tipos-producto',
           visible: true
         },
         {
-          label: 'Unidades de Medida',
+          label: 'Medidas',
           icon: 'fas fa-ruler',
           route: '/unidades-medida',
           baseRoute: 'unidades-medida',
@@ -158,7 +158,7 @@ export class Sidebar implements OnInit, OnDestroy {
     if (this.authService.puedeVerPedidos()) {
       items.push({
         label: 'Pedidos',
-        icon: 'fas fa-shopping-cart',
+        icon: 'fas fa-box-open',
         route: '/pedidos',
         baseRoute: 'pedidos',
         visible: true
@@ -172,6 +172,28 @@ export class Sidebar implements OnInit, OnDestroy {
         icon: 'fas fa-chart-line',
         route: '/predicciones',
         baseRoute: 'predicciones',
+        visible: true
+      });
+    }
+
+    //VENTAS - SOLO VENDEDOR
+    if (this.authService.puedeRealizarVentas()) {
+      items.push({
+        label: 'Punto de Venta',
+        icon: 'fas fa-shopping-cart',
+        route: '/venta',
+        baseRoute: 'venta',
+        visible: true
+      });
+    }
+
+    // Historial de Ventas - GERENTE, ADMIN o SELLER
+    if (this.authService.puedeVerHistorialVentas()) {
+      items.push({
+        label: 'Ventas',
+        icon: 'fas fa-file-invoice-dollar',
+        route: '/ventas/historial',
+        baseRoute: 'ventas',
         visible: true
       });
     }

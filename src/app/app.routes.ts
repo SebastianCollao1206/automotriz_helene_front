@@ -23,6 +23,11 @@ import { DetallePrediccion } from './features/predicciones/pages/detalle-predicc
 import { ListaPedidos } from './features/pedidos/pages/lista-pedidos/lista-pedidos';
 import { GestionPedidos } from './features/pedidos/pages/gestion-pedidos/gestion-pedidos';
 import { RecibirPedidos } from './features/pedidos/pages/recibir-pedidos/recibir-pedidos';
+import { CatalogoProductos } from './features/ventas/pages/catalogo-productos/catalogo-productos';
+import { DetalleProducto } from './features/ventas/pages/detalle-producto/detalle-producto';
+import { CarritoCompra } from './features/ventas/pages/carrito-compra/carrito-compra';
+import { Pagar } from './features/ventas/pages/pagar/pagar';
+import { Historial } from './features/ventas/pages/historial/historial';
 
 export const routes: Routes = [
 
@@ -176,6 +181,39 @@ export const routes: Routes = [
                 canActivate: [roleGuard],
                 data: { permission: 'puedeRecibirPedidos' }
             },
+
+            //VENTAS - Solo VENDEDOR
+            {
+                path: 'venta',
+                component: CatalogoProductos,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeRealizarVentas' }
+            },
+            {
+                path: 'venta/producto/detalle/:id',
+                component: DetalleProducto,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeRealizarVentas' }
+            },
+            {
+                path: 'venta/carrito',
+                component: CarritoCompra,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeRealizarVentas' }
+            },
+            {
+                path: 'venta/pagar',
+                component: Pagar,
+                canActivate: [roleGuard],
+                data: { permission: 'puedeRealizarVentas' }
+            },
+            {
+                path: 'ventas/historial',
+                component: Historial,
+                canActivate: [roleGuard],
+                data: { permission: 'verHistorialVentas' }
+            },
+
 
             // ASISTENCIA - Solo GERENTE
             {

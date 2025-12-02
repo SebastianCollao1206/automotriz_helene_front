@@ -1,0 +1,80 @@
+.producto-card {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 640px) {
+  .producto-card {
+    max-width: 100%;
+  }
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: auto;
+}
+
+
+
+/* Reposicionar el botón anterior más a la izquierda */
+swiper-container::part(button-prev) {
+    display: none;
+}
+
+swiper-container::part(button-next) {
+    display: none;
+}
+
+swiper-container::part(button-prev):hover,
+swiper-container::part(button-next):hover {
+    background-color: #3b82f6;
+    color: white;
+    transform: scale(1.15);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    border-color: #3b82f6;
+}
+
+/* Ocultar botones en móviles */
+@media (max-width: 768px) {
+    swiper-container::part(button-prev),
+    swiper-container::part(button-next) {
+        display: none;
+    }
+}
+
+swiper-container::part(bullet) {
+    background-color: #cbd5e1;
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+    transition: all 0.3s ease;
+}
+
+swiper-container::part(bullet-active) {
+    background-color: #3b82f6;
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* Animaciones suaves */
+.producto-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.producto-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}

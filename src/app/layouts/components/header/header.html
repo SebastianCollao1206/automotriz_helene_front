@@ -19,6 +19,15 @@
             </span>
         </button>
 
+        <button *ngIf="esVendedor()" (click)="toggleCarrito()"
+            class="cursor-pointer relative inline-flex items-center justify-center md:w-9 md:h-9 w-7 h-7 rounded-full border border-zinc-200 hover:bg-zinc-200 transition-colors">
+            <i class="fas fa-shopping-cart texto-pequeño text-zinc-600"></i>
+            <span *ngIf="cantidadItemsCarrito > 0" class="absolute -top-2 -right-2 flex items-center justify-center md:w-5 md:h-5 
+            w-4 h-4 text-[8px] md:text-[10px] lg:text-xs font-medium text-white bg-blue-500 rounded-full">
+                {{ cantidadItemsCarrito }}
+            </span>
+        </button>
+
         <button (click)="onToggleSidebar()"
             class="lg:hidden cursor-pointer flex items-center justify-center md:w-9 md:h-9 w-7 h-7 rounded-lg border border-zinc-200 hover:bg-zinc-200 transition-colors">
             <i class="fas fa-align-left texto-pequeño text-zinc-600"></i>
@@ -46,6 +55,67 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Carrito -->
+        <div *ngIf="isCarritoOpen"
+            class="absolute top-20 right-3 w-96 bg-white rounded-xl shadow-2xl border border-zinc-200 overflow-hidden z-50 max-h-130">
+
+            <div class="flex justify-between items-center p-4 px-8 border-b border-zinc-200 sticky top-0">
+                <h3 class="font-semibold ">
+                    Mi Carrito
+                </h3>
+                <button (click)="closeCarrito()" class="cursor-pointer text-zinc-500 hover:text-zinc-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div *ngIf="itemsCarrito.length === 0" class="p-8 text-center">
+                <i class="fas fa-shopping-cart text-4xl text-zinc-300 mb-3"></i>
+                <p class="texto-pequeño text-zinc-500">Tu carrito está vacío</p>
+            </div>
+
+            <div *ngIf="itemsCarrito.length > 0" class="max-h-80 overflow-y-auto p-3">
+                <div *ngFor="let item of itemsCarrito"
+                    class="flex gap-3 p-3 hover:bg-zinc-200/60 rounded-lg transition-colors">
+
+                    <img [src]="'http://localhost:8080/api/files/images/' + item.producto.imagen"
+                        [alt]="obtenerNombreProducto(item.producto)"
+                        class="w-16 h-16 object-contain rounded-lg">
+
+                    <div class="flex-1 min-w-0">
+                        <p class="texto-chico font-semibold text-zinc-800 truncate">
+                            {{ obtenerNombreProducto(item.producto) }}
+                        </p>
+                        <p class="texto-chico text-zinc-500 mt-1">
+                            Cantidad: {{ item.cantidad }}
+                        </p>
+                        <p class="texto-chico font-semibold text-blue-600 mt-1">
+                            S/ {{ item.subtotal | number:'1.2-2' }}
+                        </p>
+                    </div>
+
+                    <button (click)="eliminarDelCarrito(item.producto.id)"
+                        class="text-red-500 hover:text-red-700 transition-colors self-center cursor-pointer">
+                        <i class="fas fa-trash texto-chico"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="itemsCarrito.length > 0" class="border-t border-zinc-200 p-4 bg-zinc-50">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="texto-pequeño font-semibold text-zinc-700">Subtotal:</span>
+                    <span class="texto-intermedio font-bold text-green-600">
+                        S/ {{ obtenerSubtotalCarrito() | number:'1.2-2' }}
+                    </span>
+                </div>
+                <button (click)="verCarritoCompleto()" class="w-full btn btn-azul texto-pequeño py-2">
+                    <i class="fas fa-shopping-bag mr-2"></i>
+                    Ver Carrito Completo
+                </button>
+            </div>
+        </div>
+        <div *ngIf="isCarritoOpen" (click)="closeCarrito()" class="fixed inset-0 z-40"></div>
+
         <div *ngIf="isNotificationsOpen" (click)="closeNotifications()" class="fixed inset-0 z-40"></div>
 
         <div class="hidden lg:block border-l border-zinc-300 h-8"></div>
