@@ -14,6 +14,9 @@ export class DetallePrediccionTable {
 
   @Input() productos: DetallePrediccionResponse[] = [];
   @Output() verGrafico = new EventEmitter<{ id: number; nombre: string }>();
+  @Output() productoToggled = new EventEmitter<{ producto: DetallePrediccionResponse; event: Event }>();
+  @Input() productosSeleccionados: Map<number, any> = new Map();
+
 
   obtenerLabelAccion(accion: AccionPrediccion): string {
     return AccionPrediccionLabels[accion] || accion;
@@ -32,6 +35,14 @@ export class DetallePrediccionTable {
       id: producto.idProducto,
       nombre: producto.nombreProducto
     });
+  }
+
+  onToggleProducto(producto: DetallePrediccionResponse, event: Event): void {
+    this.productoToggled.emit({ producto, event });
+  }
+
+  isProductoSeleccionado(idProducto: number): boolean {
+    return this.productosSeleccionados.has(idProducto);
   }
 
 }

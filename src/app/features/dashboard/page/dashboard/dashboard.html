@@ -1,0 +1,172 @@
+<div class="container mx-auto p-5">
+    <div class="flex justify-center mb-6">
+        <h2 class="texto-grande font-bold text-zinc-800">
+            <i class="fas fa-chart-line mr-3 text-blue-600"></i>
+            Dashboard de Ventas
+        </h2>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-zinc-200 shadow-lg p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="label-formulario">
+                    <i class="fas fa-calendar text-zinc-500 mr-2"></i>
+                    Periodo
+                </label>
+                <select [(ngModel)]="periodoSeleccionado" (ngModelChange)="aplicarFiltros()"
+                    class="texto-pequeño input-formulario">
+                    <option value="mensual">Mensual</option>
+                    <option value="trimestral">Trimestral</option>
+                    <option value="anual">Anual</option>
+                </select>
+            </div>
+
+            <div *ngIf="periodoSeleccionado === 'mensual'">
+                <label class="label-formulario">
+                    <i class="fas fa-calendar-day text-zinc-500 mr-2"></i>
+                    Mes
+                </label>
+                <select [(ngModel)]="mesSeleccionado" (ngModelChange)="aplicarFiltros()"
+                    class="texto-pequeño input-formulario">
+                    <option *ngFor="let mes of meses" [value]="mes.valor">{{ mes.nombre }}</option>
+                </select>
+            </div>
+
+            <div *ngIf="periodoSeleccionado === 'trimestral'">
+                <label class="label-formulario">
+                    <i class="fas fa-calendar-week text-zinc-500 mr-2"></i>
+                    Trimestre
+                </label>
+                <select [(ngModel)]="trimestreSeleccionado" (ngModelChange)="aplicarFiltros()"
+                    class="texto-pequeño input-formulario">
+                    <option *ngFor="let trimestre of trimestres" [value]="trimestre.valor">
+                        {{ trimestre.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label class="label-formulario">
+                    <i class="fas fa-calendar-alt text-zinc-500 mr-2"></i>
+                    Año
+                </label>
+                <select [(ngModel)]="anioSeleccionado" (ngModelChange)="aplicarFiltros()"
+                    class="texto-pequeño input-formulario">
+                    <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando datos...</span>
+    </div>
+
+    <div *ngIf="!cargandoDatos">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div
+                class="bg-white rounded-xl shadow-lg border border-green-200 p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <p class="texto-chico text-zinc-600 mb-1">Total Recaudado</p>
+                        <p class="texto-grande font-bold text-green-600">S/ {{ totalRecaudado | number:'1.2-2' }}</p>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-4">
+                        <i class="fas fa-coins text-3xl text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-xl shadow-lg border border-blue-200 p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <p class="texto-chico text-zinc-600 mb-1">Número de Ventas</p>
+                        <p class="texto-grande font-bold text-blue-600">{{ numeroVentas }}</p>
+                        <p class="texto-chico text-zinc-500 mt-2">Ventas realizadas</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-4">
+                        <i class="fas fa-shopping-cart text-3xl text-blue-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-xl shadow-lg border border-purple-200 p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <p class="texto-chico text-zinc-600 mb-1">Clientes</p>
+                        <p class="texto-grande font-bold text-purple-600">{{ numeroClientes }}</p>
+                        <p class="texto-chico text-zinc-500 mt-2">Clientes únicos</p>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-4">
+                        <i class="fas fa-users text-3xl text-purple-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-lg p-6 mb-6">
+            <h3 class="texto-mediano font-semibold text-zinc-800 mb-4">
+                <i class="fas fa-chart-line mr-2 text-green-600"></i>
+                Total Recaudado vs Media
+            </h3>
+            <div style="height: 300px;">
+                <canvas baseChart #chartRecaudado [data]="lineChartDataRecaudado" [options]="lineChartOptionsRecaudado"
+                    [type]="lineChartType">
+                </canvas>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl border border-zinc-200 shadow-lg p-6">
+                <h3 class="texto-mediano font-semibold text-zinc-800 mb-4">
+                    <i class="fas fa-star mr-2 text-purple-600"></i>
+                    Top 5 Marcas Más Vendidas
+                </h3>
+                <div style="height: 300px;">
+                    <canvas baseChart #chartMarcas [data]="barChartDataMarcas" [options]="barChartOptionsMarcas"
+                        [type]="barChartType">
+                    </canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-zinc-200 shadow-lg p-6">
+                <h3 class="texto-mediano font-semibold text-zinc-800 mb-4">
+                    <i class="fas fa-trophy mr-2 text-yellow-600"></i>
+                    Top 5 Productos Más Vendidos
+                </h3>
+                <div class="space-y-3 max-h-[300px] overflow-y-auto">
+                    <div *ngFor="let producto of topProductos; let i = index"
+                        class="flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-50 transition-colors duration-200 border border-zinc-100">
+                        <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="texto-chico font-bold text-blue-600">{{ i + 1 }}</span>
+                        </div>
+                        <img [src]="obtenerUrlImagen(producto.imagen)" [alt]="producto.nombreCompleto"
+                            class="w-16 h-16 object-cover rounded-lg border border-zinc-200">
+                        <div class="flex-1 min-w-0">
+                            <p class="texto-pequeño font-semibold text-zinc-800 truncate">{{ producto.nombreCompleto }}
+                            </p>
+                            <p class="texto-chico text-zinc-500">{{ producto.marca }}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="texto-chico text-blue-600 font-semibold">
+                                    {{ producto.cantidadVendida }} vendidos
+                                </span>
+                                <span class="texto-chico text-zinc-400">•</span>
+                                <span class="texto-chico text-green-600 font-semibold">
+                                    S/ {{ producto.totalRecaudado | number:'1.2-2' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="topProductos.length === 0"
+                    class="flex flex-col items-center justify-center py-12 text-zinc-400">
+                    <i class="fas fa-box-open text-4xl mb-3"></i>
+                    <p class="texto-pequeño">No hay productos vendidos en este periodo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse,HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { ReconocimientoResponse, ParpadeoResponse, AsistenciaResponse } from '../../../models/asistencia';
+import { ReconocimientoResponse, ParpadeoResponse, AsistenciaResponse, AsistenciasDiariasResponse, AsistenciaMensualResponse } from '../../../models/asistencia';
 import { NotificacionSweet } from '../../../core/services/notificacion-sweet/notificacion-sweet';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Asistencia {
-  
+
   private readonly API_URL = `${environment.apiUrl}/asistencia`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   reconocerRostro(imagenBase64: string): Observable<ReconocimientoResponse> {
     return this.http.post<ReconocimientoResponse>(`${this.API_URL}/reconocer`, {
@@ -35,7 +35,27 @@ export class Asistencia {
   reiniciarParpadeos(): Observable<any> {
     return this.http.post(`${this.API_URL}/reiniciar-parpadeos`, {});
   }
-  
+
+  obtenerAsistenciasDelDia(): Observable<AsistenciasDiariasResponse> {
+    return this.http.get<AsistenciasDiariasResponse>(`${this.API_URL}/del-dia`);
+  }
+
+  listarTodasAsistencias(): Observable<AsistenciasDiariasResponse> {
+    return this.http.get<AsistenciasDiariasResponse>(`${this.API_URL}/listar-todas`);
+  }
+
+
+  obtenerAsistenciasMensuales(userId: number, mes: number, anio: number): Observable<AsistenciaMensualResponse> {
+    const params = new HttpParams()
+      .set('mes', mes.toString())
+      .set('anio', anio.toString());
+
+    return this.http.get<AsistenciaMensualResponse>(
+      `${this.API_URL}/usuario/${userId}/mes`,
+      { params }
+    );
+  }
+
   //Manejo de errores
   private handleError(error: HttpErrorResponse): Observable<never> {
     let mensajeError = 'Ha ocurrido un error inesperado';

@@ -1,78 +1,101 @@
-/* Estilos personalizados para FullCalendar */
-
-::ng-deep .calendar-container .fc {
-  border: none;
-}
-
-::ng-deep .calendar-container .fc-theme-standard td,
-::ng-deep .calendar-container .fc-theme-standard th {
-  border-color: #e2e8f0;
-}
-
-::ng-deep .calendar-container .fc-col-header-cell {
-  background-color: #f8fafc;
-  padding: 16px 8px;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  color: #475569;
-}
-
-::ng-deep .calendar-container .fc-daygrid-day {
-  height: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-::ng-deep .calendar-container .fc-daygrid-day-number {
-  padding: 8px;
-  font-weight: 600;
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: #334155;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  background-color: white;
+  border: 2px solid #e5e7eb;
 }
 
-::ng-deep .calendar-container .fc-day-today {
-  background-color: #dbeafe !important;
+.calendar-day:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-::ng-deep .calendar-container .fc-day-other {
-  background-color: #fafafa;
-  opacity: 0.5;
-}
-
-::ng-deep .calendar-container .fc-day-sat,
-::ng-deep .calendar-container .fc-day-sun {
-  background-color: #f8fafc;
-}
-
-::ng-deep .calendar-container .fc-daygrid-day-frame {
-  min-height: 80px;
-}
-
-/* Eventos de asistencia */
-::ng-deep .calendar-container .attendance-event {
+.calendar-day.other-month {
   opacity: 0.3;
-  border: none;
-  margin: 0;
+  cursor: default;
+  pointer-events: none;
 }
 
-::ng-deep .calendar-container .fc-daygrid-day:hover .attendance-event {
-  opacity: 0.5;
+.calendar-day.other-month:hover {
+  transform: none;
+  box-shadow: none;
 }
 
-/* Animaciones */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+.calendar-day.today {
+  border: 2px solid;
+  font-weight: 700;
+}
+
+/* .calendar-day.today .day-number {
+  color: #3b82f6;
+} */
+
+.day-number {
+  position: relative;
+  z-index: 1;
+  color: #374151;
+}
+
+/* Estados de asistencia */
+.status-presente {
+  background-color: #10b981;
+  border-color: #059669;
+}
+
+.status-presente .day-number {
+  color: white;
+  font-weight: 600;
+}
+
+.status-tardanza {
+  background-color: #f59e0b;
+  border-color: #d97706;
+}
+
+.status-tardanza .day-number {
+  color: white;
+  font-weight: 600;
+}
+
+.status-falto {
+  background-color: #ef4444;
+  border-color: #dc2626;
+}
+
+.status-falto .day-number {
+  color: white;
+  font-weight: 600;
+}
+
+.status-descanso {
+  background-color: #3b82f6;
+  border-color: #2563eb;
+}
+
+.status-descanso .day-number {
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-day.has-status:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .calendar-day {
+    font-size: 0.75rem;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .day-number {
+    font-size: 0.75rem;
   }
-}
-
-.calendar-container {
-  animation: fadeIn 0.3s ease-out;
 }

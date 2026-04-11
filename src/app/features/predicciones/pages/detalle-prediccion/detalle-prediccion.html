@@ -126,7 +126,11 @@
 
         <div class="mx-auto px-8 py-2">
             <div class="rounded-2xl border border-zinc-200 overflow-hidden shadow-lg mb-4">
-                <app-detalle-prediccion-table [productos]="productosPaginados" (verGrafico)="abrirModalGrafico($event)">
+                <!-- <app-detalle-prediccion-table [productos]="productosPaginados" (verGrafico)="abrirModalGrafico($event)">
+                </app-detalle-prediccion-table> -->
+                <app-detalle-prediccion-table [productos]="productosPaginados"
+                    [productosSeleccionados]="productosSeleccionados" (verGrafico)="abrirModalGrafico($event)"
+                    (productoToggled)="toggleProducto($event.producto, $event.event)">
                 </app-detalle-prediccion-table>
                 <div
                     class="bg-zinc-100 px-3 md:px-6 lg:px-12 py-4 border-t border-zinc-200 flex flex-col sm:flex-row justify-between gap-4 items-center">
@@ -175,6 +179,14 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="mx-auto px-8 py-6 flex justify-end">
+        <button
+            class="btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed texto-mediano font-semibold"
+            [disabled]="productosSeleccionados.size === 0" (click)="irAComprar()">
+            <i class="fas fa-shopping-cart mr-2"></i>
+            Ir a Comprar ({{ productosSeleccionados.size }})
+        </button>
     </div>
 </div>
 

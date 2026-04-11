@@ -12,7 +12,7 @@ import { Proveedor } from '../../../../core/services/proveedor/proveedor';
 import { Producto } from '../../../../core/services/producto/producto';
 import { Router } from '@angular/router';
 import { construirNombreProducto } from '../../../../shared/utils/producto-nombre';
-
+import { ProductosCompartidos, ProductoParaPedido } from '../../../predicciones/service/productos-compartidos';
 interface DetalleTemp {
   id?: number;
   productoId: number;
@@ -21,7 +21,6 @@ interface DetalleTemp {
   precioCompraUnitario: number;
   subtotal: number;
 }
-
 @Component({
   selector: 'app-pedidos-form',
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
@@ -62,7 +61,8 @@ export class PedidosForm implements OnInit, OnChanges {
     public validacionFormulario: Validaciones,
     private proveedorService: Proveedor,
     private productoService: Producto,
-    private router: Router
+    private router: Router,
+    private productosCompartidos: ProductosCompartidos
   ) {
     this.formularioPedido = this.crearFormulario();
     this.inicializarEventListeners();
@@ -70,6 +70,7 @@ export class PedidosForm implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.cargarDatosIniciales();
+    this.cargarProductosDesdePrediccion();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -79,6 +80,32 @@ export class PedidosForm implements OnInit, OnChanges {
       }
     }
     this.cdr.detectChanges();
+  }
+
+  private cargarProductosDesdePrediccion(): void {
+    const productosPrediccion = this.productosCompartidos.getProductos();
+
+    if (productosPrediccion.length > 0) {
+      setTimeout(() => {
+        productosPrediccion.forEach(producto => {
+          const detalleTemp: DetalleTemp = {
+            productoId: producto.id,
+            nombreProducto: producto.nombre,
+            cantidad: producto.cantidad,
+            precioCompraUnitario: 10,
+            subtotal: producto.cantidad * 10
+          };
+          this.detallesPedido.push(detalleTemp);
+        });
+
+        NotificacionSweet.showInfo(
+          'Productos agregados',
+          `Se han agregado ${productosPrediccion.length} producto${productosPrediccion.length !== 1 ? 's' : ''} con precio S/ 10.00. Por favor, ajusta los precios según corresponda.`
+        );
+
+        this.cdr.detectChanges();
+      }, 500);
+    }
   }
 
   private crearFormulario(): FormGroup {

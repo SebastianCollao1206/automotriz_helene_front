@@ -28,6 +28,7 @@ import { DetalleProducto } from './features/ventas/pages/detalle-producto/detall
 import { CarritoCompra } from './features/ventas/pages/carrito-compra/carrito-compra';
 import { Pagar } from './features/ventas/pages/pagar/pagar';
 import { Historial } from './features/ventas/pages/historial/historial';
+import { Dashboard } from './features/dashboard/page/dashboard/dashboard';
 
 export const routes: Routes = [
 
@@ -212,6 +213,14 @@ export const routes: Routes = [
                 component: Historial,
                 canActivate: [roleGuard],
                 data: { permission: 'verHistorialVentas' }
+            },
+
+            //Dashboard - Solo GERENTE
+            {
+                path: 'dashboard',
+                component: Dashboard,
+                canActivate: [roleGuard],
+                data: { permission: 'verDashboard' }
             },
 
 

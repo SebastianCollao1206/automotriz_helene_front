@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GraficoPrediccionGeneral } from '../../components/grafico-prediccion-general/grafico-prediccion-general';
 import { GraficoProductosCriticos } from '../../components/grafico-productos-criticos/grafico-productos-criticos';
 import { construirNombreProducto } from '../../../../shared/utils/producto-nombre';
+import { ProductosCompartidos } from '../../service/productos-compartidos';
 
 interface PrediccionConMetadatos extends PrediccionResponse {
   trimestre: string;
@@ -50,6 +51,16 @@ export class DetallePrediccion implements OnInit {
   productoNombreSeleccionado = '';
 
   Math = Math;
+
+  productosSeleccionados: Map<number, { id: number; nombre: string; cantidad: number }> = new Map();
+
+  private ordenAcciones: { [key: string]: number } = {
+    'pedido_urgente': 1,
+    'reponer_pronto': 2,
+    'monitorear': 3,
+    'stock_suficiente': 4,
+    'sin_registros': 5
+  };
 
   get productosPaginados(): DetallePrediccionResponse[] {
     const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
@@ -123,7 +134,8 @@ export class DetallePrediccion implements OnInit {
     private prediccionService: Prediccion,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private productosCompartidos: ProductosCompartidos
   ) { }
 
   ngOnInit(): void {
@@ -226,7 +238,7 @@ export class DetallePrediccion implements OnInit {
 
     this.productosFiltrados = this.prediccion.productos.map(producto => ({
       ...producto,
-      nombreProducto: construirNombreProducto(producto) 
+      nombreProducto: construirNombreProducto(producto)
     })).filter(producto => {
       const cumpleNombre = !this.filtroNombre ||
         producto.nombreProducto.toLowerCase().includes(this.filtroNombre.toLowerCase());
@@ -238,7 +250,14 @@ export class DetallePrediccion implements OnInit {
         producto.accion === this.filtroAccion;
 
       return cumpleNombre && cumpleCategoria && cumpleAccion;
-    });
+    })
+
+      .sort((a, b) => {
+        const ordenA = this.ordenAcciones[a.accion] ?? 999;
+        const ordenB = this.ordenAcciones[b.accion] ?? 999;
+        return ordenA - ordenB;
+      });
+
 
     this.calcularPaginacion();
     this.ajustarPaginaActual();
@@ -315,5 +334,39 @@ export class DetallePrediccion implements OnInit {
     this.productoIdSeleccionado = null;
     this.productoNombreSeleccionado = '';
   }
+
+  toggleProducto(producto: DetallePrediccionResponse, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.productosSeleccionados.set(producto.idProducto, {
+        id: producto.idProducto,
+        nombre: producto.nombreProducto,
+        cantidad: producto.cantidadAComprar
+      });
+    } else {
+      this.productosSeleccionados.delete(producto.idProducto);
+    }
+  }
+
+  isProductoSeleccionado(idProducto: number): boolean {
+    return this.productosSeleccionados.has(idProducto);
+  }
+
+  irAComprar(): void {
+    const productos = Array.from(this.productosSeleccionados.values());
+
+    NotificacionSweet.showConfirmation(
+      '¿Ir a crear pedido?',
+      `Se agregarán ${productos.length} producto${productos.length !== 1 ? 's' : ''} al pedido. Los precios estarán en S/ 10.00 por defecto y deberás modificarlos manualmente.`,
+      'Sí, continuar',
+      'Cancelar'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        this.productosCompartidos.setProductos(productos);
+        this.router.navigate(['/pedidos/agregar']);
+      }
+    });
+  }
+
 
 }

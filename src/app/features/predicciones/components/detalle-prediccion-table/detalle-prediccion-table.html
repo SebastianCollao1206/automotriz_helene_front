@@ -10,6 +10,7 @@
                 <th class="texto-pequeño th-tabla">Cantidad a Comprar</th>
                 <th class="texto-pequeño th-tabla">Acción</th>
                 <th class="texto-pequeño th-tabla">Ver</th>
+                <th class="texto-pequeño th-tabla">Agregar</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-zinc-200">
@@ -45,6 +46,11 @@
                         [attr.aria-label]="'Ver detalles de ' + producto.nombreProducto">
                         <i class="fas fa-chart-line texto-mediano"></i>
                     </button>
+                </td>
+                <td class="py-3 px-3 text-center">
+                    <input type="checkbox" [checked]="isProductoSeleccionado(producto.idProducto)"
+                        (change)="onToggleProducto(producto, $event)"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
                 </td>
             </tr>
         </tbody>

@@ -24,3 +24,38 @@ export interface AsistenciaResponse {
   };
   mensaje?: string;
 }
+export interface AsistenciaDiariaDTO {
+  userId: number;
+  nombreUsuario: string;
+  fecha: string;
+  horaEntrada: string | null;
+  estado: string;
+}
+
+export interface AsistenciasDiariasResponse {
+  success: boolean;
+  total: number;
+  asistencias: AsistenciaDiariaDTO[];
+  mensaje?: string;
+}
+
+export interface DetalleAsistenciaDia {
+  fecha: string;
+  diaSemana: string;
+  estado: string; 
+}
+
+export interface AsistenciaMensualResponse {
+  success: boolean;
+  data: {
+    nombreUsuario: string;
+    mes: number;
+    anio: number;
+    totalPresente: number;
+    totalTardanza: number;
+    totalFalta: number;
+    porcentajeAsistencia: number;
+    detalles: DetalleAsistenciaDia[];
+  };
+  mensaje?: string;
+}

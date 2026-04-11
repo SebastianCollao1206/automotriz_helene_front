@@ -198,6 +198,17 @@ export class Sidebar implements OnInit, OnDestroy {
       });
     }
 
+    // Dashboard - Solo GERENTE
+    if (this.authService.puedeVerDashboard()) {
+      items.push({
+        label: 'Dashboard',
+        icon: 'fas fa-chart-line',
+        route: '/dashboard',
+        baseRoute: 'dashboard',
+        visible: true
+      });
+    }
+
     this.menuItems = items;
   }
 

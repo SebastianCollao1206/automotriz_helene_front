@@ -1,7 +1,7 @@
 <div class="mx-auto px-8 py-8">
     <div class="rounded-2xl border border-zinc-200 overflow-hidden shadow-lg">
         <div class="overflow-x-auto">
-            <table class="w-full ">
+            <table class="w-full">
                 <thead class="border-b border-zinc-200">
                     <tr class="bg-zinc-100 text-center">
                         <th class="texto-pequeño th-tabla">Nombre</th>
@@ -11,140 +11,36 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-200">
-                    <tr class="hover:bg-zinc-100 transition-colors duration-200 text-center">
+                    <tr *ngFor="let asistencia of asistencias"
+                        class="hover:bg-zinc-100 transition-colors duration-200 text-center">
                         <td class="texto-pequeño td1-tabla">
-                            Juan Pérez
+                            {{ asistencia.nombreUsuario }}
                         </td>
-                        <td class="td2-tabla texto-pequeño">8:30</td>
-                        <td class="py-3 px-3">
-                            <button class="badge-verde texto-pequeño py-2 px-5">
-                                <i class="fas fa-check sm:mr-2 mr-0"></i>
-                                Presente
-                            </button>
+                        <td class="td2-tabla texto-pequeño">
+                            {{ formatearHora(asistencia.horaEntrada) }}
                         </td>
                         <td class="py-3 px-3">
-                            <button class="btn btn-editar">
-                                <i class="fas fa-history mr-2"></i>
-                                Ver historial
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-zinc-100 transition-colors duration-200 text-center">
-                        <td class="texto-pequeño td1-tabla">
-                            Juan Pérez
-                        </td>
-                        <td class="td2-tabla texto-pequeño">8:30</td>
-                        <td class="py-3 px-3">
-                            <button class="badge-amarillo texto-pequeño py-2 px-5">
-                                <i class="fas fa-triangle-exclamation sm:mr-2 mr-0"></i>
-                                Tardanza
-                            </button>
-                        </td>
-                        <td class="py-3 px-3">
-                            <button class="btn btn-editar">
-                                <i class="fas fa-history mr-2"></i>
-                                Ver historial
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-zinc-100 transition-colors duration-200 text-center">
-                        <td class="texto-pequeño td1-tabla">
-                            Juan Pérez
-                        </td>
-                        <td class="td2-tabla texto-pequeño">8:30</td>
-                        <td class="py-3 px-3">
-                            <button class="badge-rojo texto-pequeño py-2 px-5">
-                                <i class="fas fa-xmark sm:mr-2 mr-0"></i>
-                                Ausente
-                            </button>
-                        </td>
-                        <td class="py-3 px-3">
-                            <button class="btn btn-editar">
-                                <i class="fas fa-history mr-2"></i>
-                                Ver historial
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-zinc-100 transition-colors duration-200 text-center">
-                        <td class="texto-pequeño td1-tabla">
-                            Juan Pérez
-                        </td>
-                        <td class="td2-tabla texto-pequeño">8:30</td>
-                        <td class="py-3 px-3">
-                            <button class="badge-verde texto-pequeño py-2 px-5">
-                                <i class="fas fa-check sm:mr-2 mr-0"></i>
-                                Presente
-                            </button>
-                        </td>
-                        <td class="py-3 px-3">
-                            <button class="btn btn-editar">
-                                <i class="fas fa-history mr-2"></i>
-                                Ver historial
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-zinc-100 transition-colors duration-200 text-center">
-                        <td class="texto-pequeño td1-tabla">
-                            Juan Pérez
-                        </td>
-                        <td class="td2-tabla texto-pequeño">8:30</td>
-                        <td class="py-3 px-3">
-                            <button class="badge-amarillo texto-pequeño py-2 px-5">
-                                <i class="fas fa-triangle-exclamation sm:mr-2 mr-0"></i>
-                                Tardanza
-                            </button>
-                        </td>
-                        <td class="py-3 px-3">
-                            <button class="btn btn-editar">
-                                <i class="fas fa-history mr-2"></i>
-                                Ver historial
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-zinc-100 transition-colors duration-200 text-center">
-                        <td class="texto-pequeño td1-tabla">
-                            Juan Pérez
-                        </td>
-                        <td class="td2-tabla texto-pequeño">9:30</td>
-                        <td class="py-3 px-3">
-                            <div class="badge-rojo texto-pequeño py-2 px-5">
-                                <i class="fas fa-xmark sm:mr-2 mr-0"></i>
-                                Ausente
+                            <div [class]="getEstadoClass(asistencia.estado) + ' texto-pequeño py-2 px-5'">
+                                <i [class]="getEstadoIcon(asistencia.estado) + ' sm:mr-2 mr-0'"></i>
+                                {{ asistencia.estado | titlecase }}
                             </div>
                         </td>
                         <td class="py-3 px-3">
-                            <button class="btn btn-editar">
+                            <button class="btn btn-editar" (click)="onVerHistorial(asistencia.userId)">
                                 <i class="fas fa-history mr-2"></i>
                                 Ver historial
                             </button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="asistencias.length === 0">
+                        <td colspan="4" class="py-8 text-center texto-pequeño text-zinc-500">
+                            <i class="fas fa-inbox text-3xl mb-2"></i>
+                            <p>No hay asistencias registradas</p>
                         </td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-        <div
-            class="bg-zinc-100 px-3 md:px-6 lg:px-12 py-4 border-t border-zinc-200 flex flex-col sm:flex-row justify-between gap-4 items-center">
-            <div class=" texto-pequeño">
-                Mostrando 1-5 de 23 usuarios
-            </div>
-            <div class="flex space-x-1 sm:space-x-2 lg:space-x-3 texto-pequeño">
-                <button
-                    class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button
-                    class="px-3 py-1 bg-zinc-500 hover:bg-zinc-600 text-white rounded transition-colors duration-200 cursor-pointer">1</button>
-                <button
-                    class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer">2</button>
-                <button
-                    class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer">3</button>
-                <button
-                    class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
         </div>
     </div>
 </div>

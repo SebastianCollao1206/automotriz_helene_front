@@ -19,45 +19,20 @@ export class GraficoProductosCriticos implements OnChanges {
 
   hayDatos = false;
 
-  public pieChartType: ChartType = 'pie';
-  public pieChartData: ChartConfiguration['data'] = {
+  public barChartType: ChartType = 'bar';
+
+  public barChartData: ChartConfiguration['data'] = {
     datasets: [],
     labels: []
   };
 
-  public pieChartOptions: ChartConfiguration['options'] = {
+  public barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
+    indexAxis: 'x', // Para barras horizontales
     plugins: {
       legend: {
-        display: true,
-        position: 'bottom',
-        labels: {
-          usePointStyle: true,
-          padding: 15,
-          font: {
-            size: 11,
-            weight: 'bold' as const
-          },
-          generateLabels: (chart) => {
-            const data = chart.data;
-            if (data.labels && data.datasets.length) {
-              return data.labels.map((label, i) => {
-                const value = data.datasets[0].data[i] as number;
-                const total = (data.datasets[0].data as number[]).reduce((a, b) => a + b, 0);
-                const percentage = ((value / total) * 100).toFixed(1);
-
-                return {
-                  text: `${label}: ${value} (${percentage}%)`,
-                  fillStyle: (data.datasets[0].backgroundColor as string[])[i],
-                  hidden: false,
-                  index: i
-                };
-              });
-            }
-            return [];
-          }
-        }
+        display: false
       },
       tooltip: {
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -66,27 +41,33 @@ export class GraficoProductosCriticos implements OnChanges {
         borderColor: '#e4e4e7',
         borderWidth: 1,
         padding: 12,
-        displayColors: true,
         callbacks: {
           label: (context) => {
-            const label = context.label || '';
-            const value = context.parsed as number;
+            const value = context.parsed.x as number;
             const total = (context.dataset.data as number[]).reduce((a: number, b: number) => a + b, 0);
             const percentage = ((value / total) * 100).toFixed(1);
-
-            return `${label}: ${value} productos (${percentage}%)`;
+            return `${value} productos (${percentage}%)`;
           }
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
         }
       }
     }
   };
 
+
   private coloresAcciones: { [key: string]: string } = {
-    'PEDIDO URGENTE': '#ef4444',     
-    'REPONER_PRONTO': '#f59e0b',      
-    'MONITOREAR': '#3b82f6',          
-    'STOCK_SUFICIENTE': '#22c55e',    
-    'SIN_REGISTROS': '#6b7280'        
+    'pedido_urgente': '#ef4444',
+    'reponer_pronto': '#f59e0b',
+    'monitorear': '#3b82f6',
+    'stock_suficiente': '#22c55e',
+    'sin_registros': '#6b7280'
   };
 
   constructor(private cdr: ChangeDetectorRef) { }
@@ -116,15 +97,13 @@ export class GraficoProductosCriticos implements OnChanges {
       accion => this.coloresAcciones[accion] || '#6b7280'
     );
 
-    this.pieChartData = {
+    this.barChartData = {
       labels: labels,
       datasets: [{
         data: data,
         backgroundColor: colores,
         borderColor: '#ffffff',
-        borderWidth: 2,
-        hoverBorderWidth: 3,
-        hoverBorderColor: '#ffffff'
+        borderWidth: 1
       }]
     };
 

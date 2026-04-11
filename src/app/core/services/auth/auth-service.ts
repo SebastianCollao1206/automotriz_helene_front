@@ -274,4 +274,9 @@ export class AuthService {
     return this.tieneAlgunRol(['ROLE_MANAGER', 'ROLE_ADMIN', 'ROLE_SELLER']);
   }
 
+  //Dashboard
+  puedeVerDashboard(): boolean {
+    return this.esGerente();
+  }
+
 }

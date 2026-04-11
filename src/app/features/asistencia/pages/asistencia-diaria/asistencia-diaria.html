@@ -4,111 +4,164 @@
         <p class="texto-pequeño text-zinc-600 flex justify-center">Control de asistencias de todos los empleados</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-8">
-        <div class="rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="texto-pequeño font-medium text-zinc-600">Total</p>
-                    <p class="texto-titulo font-bold text-zinc-800 mt-1">8</p>
+    <div *ngIf="cargandoDatos" class="flex justify-center items-center p-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+        <span class="ml-4 texto-intermedio text-zinc-600">Cargando datos...</span>
+    </div>
+
+    <div *ngIf="!cargandoDatos">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-8">
+            <div class="rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="texto-pequeño font-medium text-zinc-600">Total</p>
+                        <p class="texto-titulo font-bold text-zinc-800 mt-1">{{ totalAsistencias }}</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-lg flex justify-center items-center">
+                        <i class="fas fa-users text-blue-600 texto-intermedio"></i>
+                    </div>
                 </div>
-                <div class="bg-blue-100 p-3 rounded-lg flex justify-center items-center">
-                    <i class="fas fa-users text-blue-600 texto-intermedio"></i>
+            </div>
+
+            <div class="rounded-xl shadow-sm border border-green-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="texto-pequeño font-medium text-zinc-600">Presentes</p>
+                        <p class="texto-titulo font-bold text-green-600 mt-1">{{ totalPresentes }}</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-lg flex justify-center items-center">
+                        <i class="fas fa-circle-check text-green-600 texto-intermedio"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-yellow-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="texto-pequeño font-medium text-zinc-600">Tardanzas</p>
+                        <p class="texto-titulo font-bold text-yellow-600 mt-1">{{ totalTardanzas }}</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-lg flex justify-center items-center">
+                        <i class="fas fa-clock text-yellow-600 texto-intermedio"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-red-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="texto-pequeño font-medium text-zinc-600">Ausentes</p>
+                        <p class="texto-titulo font-bold text-red-600 mt-1">{{ totalAusentes }}</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-lg flex justify-center items-center">
+                        <i class="fas fa-circle-xmark text-red-600 texto-intermedio"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="rounded-xl shadow-sm border border-green-200 p-6 hover:shadow-lg transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="texto-pequeño font-medium text-zinc-600">Presentes</p>
-                    <p class="texto-titulo font-bold text-green-600 mt-1">4</p>
-                </div>
-                <div class="bg-green-100 p-3 rounded-lg flex justify-center items-center">
-                    <i class="fas fa-circle-check text-green-600 texto-intermedio"></i>
+        <div class="px-8 py-2">
+            <div class="rounded-xl shadow-lg border border-zinc-200 p-6">
+                <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+
+                    <div class="flex sm:flex-row flex-col items-center gap-3 sm:p-4 p-0">
+                        <div class="flex">
+                            <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors"
+                                (click)="retrocederDia()">
+                                <i class="fas fa-chevron-left text-zinc-600"></i>
+                            </button>
+
+                            <div class="bg-zinc-100 px-6 py-3 mx-2 rounded-lg border border-zinc-200 min-w-max">
+                                <p class="texto-pequeño font-semibold text-zinc-800">
+                                    {{ fechaSeleccionada }}
+                                </p>
+                            </div>
+
+                            <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors" (click)="avanzarDia()">
+                                <i class="fas fa-chevron-right text-zinc-600"></i>
+                            </button>
+                        </div>
+
+                        <button class="btn btn-azul" (click)="irAHoy()">
+                            Hoy
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 w-full lg:w-auto">
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-user text-zinc-500 mr-2"></i>
+                                Buscar por nombre
+                            </label>
+                            <input type="text" [(ngModel)]="filtroNombre" (ngModelChange)="aplicarFiltros()"
+                                placeholder="Ingresa un nombre..." class="texto-pequeño input-formulario">
+                        </div>
+                        <div>
+                            <label class="label-formulario">
+                                <i class="fas fa-circle-dot text-zinc-500 mr-2"></i>
+                                Estado
+                            </label>
+                            <div class="relative inline-block w-full">
+                                <select [(ngModel)]="filtroEstado" (ngModelChange)="aplicarFiltros()"
+                                    class="texto-pequeño input-formulario appearance-none">
+                                    <option value="TODOS">Todos</option>
+                                    <option value="PRESENTE">Presente</option>
+                                    <option value="TARDANZA">Tardanza</option>
+                                    <option value="AUSENTE">Ausente</option>
+                                </select>
+                                <i
+                                    class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-yellow-200 p-6 hover:shadow-lg transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="texto-pequeño font-medium text-zinc-600">Tardanzas</p>
-                    <p class="texto-titulo font-bold text-yellow-600 mt-1">2</p>
-                </div>
-                <div class="bg-yellow-100 p-3 rounded-lg flex justify-center items-center">
-                    <i class="fas fa-clock text-yellow-600 texto-intermedio"></i>
-                </div>
-            </div>
-        </div>
+        <app-asistencia-table [asistencias]="asistenciasPaginadas" (verHistorial)="onVerHistorial($event)">
+        </app-asistencia-table>
 
-        <div class="bg-white rounded-xl shadow-sm border border-red-200 p-6 hover:shadow-lg transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="texto-pequeño font-medium text-zinc-600">Ausentes</p>
-                    <p class="texto-titulo font-bold text-red-600 mt-1">2</p>
-                </div>
-                <div class="bg-red-100 p-3 rounded-lg flex justify-center items-center">
-                    <i class="fas fa-circle-xmark text-red-600 texto-intermedio"></i>
+        <div class="mx-auto px-8 py-2">
+            <div class="rounded-2xl border border-zinc-200 overflow-hidden shadow-lg">
+                <div
+                    class="bg-zinc-100 px-3 md:px-6 lg:px-12 py-4 border-t border-zinc-200 flex flex-col sm:flex-row justify-between gap-4 items-center">
+                    <div class="texto-pequeño text-zinc-700">
+                        Mostrando {{ asistenciasPaginadas.length }} de {{ asistenciasFiltradas.length }} asistencia{{
+                        asistenciasFiltradas.length !== 1 ? 's' : '' }}
+                    </div>
+
+                    <div class="flex items-center space-x-1 sm:space-x-2 texto-pequeño">
+                        <button
+                            class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === 1" (click)="paginaAnterior()" aria-label="Página anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+
+                        <ng-container *ngFor="let pagina of paginasArray">
+                            <button *ngIf="pagina !== '...'"
+                                [class]="paginaActual === pagina 
+                                    ? 'px-2 sm:px-3 py-1 bg-zinc-500 hover:bg-zinc-600 text-white rounded transition-colors duration-200 cursor-pointer font-semibold'
+                                    : 'px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 cursor-pointer'"
+                                (click)="onClickPagina(pagina)" [attr.aria-label]="'Ir a página ' + pagina"
+                                [attr.aria-current]="paginaActual === pagina ? 'page' : null">
+                                {{ pagina }}
+                            </button>
+
+                            <span *ngIf="pagina === '...'" class="px-1 sm:px-2 text-zinc-500 select-none"
+                                aria-hidden="true">
+                                ...
+                            </span>
+                        </ng-container>
+
+                        <button
+                            class="px-2 sm:px-3 py-1 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            [disabled]="paginaActual === totalPaginas || totalPaginas === 0" (click)="paginaSiguiente()"
+                            aria-label="Página siguiente">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="px-8 py-2">
-        <div class="rounded-xl shadow-lg border border-zinc-200 p-6">
-            <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
-
-                <div class="flex sm:flex-row flex-col items-center gap-3 sm:p-4 p-0">
-                    <div class="flex">
-                        <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors">
-                            <i class="fas fa-chevron-left text-zinc-600"></i>
-                        </button>
-
-                        <div class="bg-zinc-100 px-6 py-3 mx-2 rounded-lg border border-zinc-200 min-w-max">
-                            <p class="texto-pequeño font-semibold text-zinc-800" id="dateDisplay">
-                                Lunes, 21 octubre 2025
-                            </p>
-                        </div>
-
-                        <button class="p-2 hover:bg-zinc-200 rounded-lg transition-colors">
-                            <i class="fas fa-chevron-right text-zinc-600"></i>
-                        </button>
-                    </div>
-
-                    <button class="btn btn-azul">
-                        Hoy
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3 w-full lg:w-auto">
-                    <div>
-                        <label class="label-formulario">
-                            <i class="fas fa-user text-zinc-500 mr-2"></i>
-                            Buscar por nombre
-                        </label>
-                        <input type="text" id="filterName" placeholder="Ingresa un nombre..."
-                            class="texto-pequeño input-formulario">
-                    </div>
-                    <div>
-                        <label class="label-formulario">
-                            <i class="fas fa-circle-dot text-zinc-500 mr-2"></i>
-                            Estado
-                        </label>
-                        <div class="relative inline-block w-full">
-                            <select class="texto-pequeño input-formulario appearance-none">
-                                <option>Todos</option>
-                                <option>Presente</option>
-                                <option>Tardanza</option>
-                                <option>Ausente</option>
-                            </select>
-                            <i class="fas fa-chevron-down absolute texto-chico top-1/2 right-4 -translate-y-1/2"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Lista de empleados -->
-    <app-asistencia-table></app-asistencia-table>
-
 </div>

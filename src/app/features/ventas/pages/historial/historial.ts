@@ -292,4 +292,27 @@ export class Historial implements OnInit, OnDestroy {
     return Array.from(metodos).sort();
   }
 
+  obtenerTotalPorMetodo(metodo: string): number {
+    return this.ventasFiltradas
+      .filter(v => v.metodoPago === metodo)
+      .reduce((sum, venta) => sum + venta.total, 0);
+  }
+
+  obtenerCantidadPorMetodo(metodo: string): number {
+    return this.ventasFiltradas.filter(v => v.metodoPago === metodo).length;
+  }
+
+  obtenerMetodosPagoAdicionales(): string[] {
+    const metodosBase = ['EFECTIVO', 'YAPE'];
+    const todosMetodos = new Set(this.ventasFiltradas.map(v => v.metodoPago));
+    return Array.from(todosMetodos).filter(m => !metodosBase.includes(m)).sort();
+  }
+
+  obtenerTotalProductosVendidos(): number {
+    return this.ventasFiltradas.reduce((total, venta) => {
+      const cantidadVenta = venta.detalles.reduce((sum, detalle) => sum + detalle.cantidad, 0);
+      return total + cantidadVenta;
+    }, 0);
+  }
+
 }
