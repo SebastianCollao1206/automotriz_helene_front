@@ -35,7 +35,7 @@ export class ListaProductos implements OnInit {
   filtroStock = '';
 
   paginaActual = 1;
-  itemsPorPagina = 6;
+  itemsPorPagina = 16;
   totalPaginas = 0;
 
   Math = Math;
